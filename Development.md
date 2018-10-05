@@ -26,6 +26,11 @@ gradle
 ## CircleCI Orb config
 The main config is defined in .circle/orb/orb.yml
 
+### Create namespace
+```
+circleci namespace create nowsecure github nowsecure
+```
+
 ### Validate config
 ```
 circleci orb validate .circle/orb/orb.yml
