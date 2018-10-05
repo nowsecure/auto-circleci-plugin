@@ -28,7 +28,18 @@ public class Main implements NSAutoParameters {
     private int scoreThreshold;
     private String apiKey;
     private File artifactsDir;
+    private String description;
+
     private final IOHelper helper = new IOHelper(PLUGIN_NAME, TIMEOUT);
+
+    @Override
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
 
     /*
      * (non-Javadoc)
