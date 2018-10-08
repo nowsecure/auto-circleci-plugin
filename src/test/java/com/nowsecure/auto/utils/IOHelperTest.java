@@ -1,4 +1,4 @@
-package com.nowsecure.auto.circleci.utils;
+package com.nowsecure.auto.utils;
 
 import java.io.File;
 import java.io.IOException;

@@ -1,4 +1,4 @@
-package com.nowsecure.auto.circleci.domain;
+package com.nowsecure.auto.domain;
 
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;

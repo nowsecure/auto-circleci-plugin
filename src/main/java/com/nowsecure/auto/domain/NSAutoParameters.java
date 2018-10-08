@@ -1,4 +1,4 @@
-package com.nowsecure.auto.circleci.domain;
+package com.nowsecure.auto.domain;
 
 import java.io.File;
 
@@ -18,9 +18,5 @@ public interface NSAutoParameters {
     int getWaitMinutes();
 
     int getScoreThreshold();
-
-    void info(Object obj);
-
-    void error(Object obj);
 
 }

@@ -1,12 +1,12 @@
 {
-  "group": "0b9dd3a2-b3b6-11e8-9906-07a7802d43b4",
-  "application": "cda1ab20-b3a9-11e8-9249-4fd7d1f3c73a",
-  "account": "d2fc75a0-b2d8-48f5-a70d-eded118f3065",
+  "group": "good",
+  "application": "cda1",
+  "account": "myaccount",
   "platform": "android",
   "package": "com.apkpure.aegon",
   "task": 1536445509394,
-  "binary": "2bd73383b2614ac946339f6c497d8c35c41e615cb8e66819ba8fa2ff36fa0486",
-  "creator": "308faa2a-b2fb-11e8-ba2d-936f5b753e54",
+  "binary": "mydigest",
+  "creator": "308fa",
   "created": "2018-09-08T22:25:09.506Z",
   "config": {
     "static": {

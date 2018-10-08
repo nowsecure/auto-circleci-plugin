@@ -1,0 +1,11 @@
+{
+  "digest": "mydigest",
+  "algorithm": "sha256",
+  "token": "eyJh",
+  "analyzed": true,
+  "platform": "android",
+  "package": "com.apkpure.aegon",
+  "name": "APKPure",
+  "version": "1.3.0",
+  "title": "APKPure"
+}

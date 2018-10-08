@@ -1,4 +1,4 @@
-package com.nowsecure.auto.circleci.utils;
+package com.nowsecure.auto.utils;
 
 import java.io.BufferedWriter;
 import java.io.ByteArrayOutputStream;
@@ -20,7 +20,7 @@ import java.util.Optional;
 import java.util.Scanner;
 import java.util.function.BiPredicate;
 
-public class IOHelper {
+public class IOHelper implements IOHelperI {
     static String VERSION_TXT = "/version.txt";
     private static final String USER_AGENT = "User-Agent";
     private static final String GET = "GET";
@@ -69,6 +69,13 @@ public class IOHelper {
         return null;
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.nowsecure.auto.utils.IOHelperI#save(java.lang.String,
+     * java.lang.String)
+     */
+    @Override
     public void save(String path, String contents) throws IOException {
         try (BufferedWriter writer = new BufferedWriter(
                 new OutputStreamWriter(new FileOutputStream(path), StandardCharsets.UTF_8))) {
@@ -87,6 +94,13 @@ public class IOHelper {
         return buffer.toByteArray();
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.nowsecure.auto.utils.IOHelperI#get(java.lang.String,
+     * java.lang.String)
+     */
+    @Override
     public String get(String uri, String apiKey) throws IOException {
         URL url = new URL(uri);
         HttpURLConnection con = (HttpURLConnection) url.openConnection();
@@ -99,6 +113,13 @@ public class IOHelper {
         return json.trim();
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.nowsecure.auto.utils.IOHelperI#post(java.lang.String,
+     * java.lang.String)
+     */
+    @Override
     public String post(String uri, String apiKey) throws IOException {
         URL url = new URL(uri);
         HttpURLConnection con = (HttpURLConnection) url.openConnection();
@@ -111,6 +132,13 @@ public class IOHelper {
         return json;
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.nowsecure.auto.utils.IOHelperI#upload(java.lang.String,
+     * java.lang.String, java.lang.String)
+     */
+    @Override
     public String upload(String uri, String apiKey, String file) throws IOException {
         URL url = new URL(uri);
         HttpURLConnection con = (HttpURLConnection) url.openConnection();

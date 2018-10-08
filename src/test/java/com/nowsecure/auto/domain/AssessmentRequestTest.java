@@ -1,4 +1,4 @@
-package com.nowsecure.auto.circleci.domain;
+package com.nowsecure.auto.domain;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -8,6 +8,8 @@ import java.nio.file.Paths;
 import org.junit.Assert;
 import org.junit.Test;
 
+import com.nowsecure.auto.domain.AssessmentRequest;
+
 public class AssessmentRequestTest {
 
     @Test
@@ -16,7 +18,7 @@ public class AssessmentRequestTest {
         byte[] fileBytes = Files.readAllBytes(path);
         String json = new String(fileBytes);
         AssessmentRequest info = AssessmentRequest.fromJson(json);
-        Assert.assertEquals("d2fc75a0-b2d8-48f5-a70d-eded118f3065", info.getAccount());
+        Assert.assertEquals("myaccount", info.getAccount());
         Assert.assertTrue(info.toString().length() > 0);
     }
 

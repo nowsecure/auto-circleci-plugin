@@ -1,4 +1,4 @@
-package com.nowsecure.auto.circleci.domain;
+package com.nowsecure.auto.domain;
 
 import java.io.IOException;
 

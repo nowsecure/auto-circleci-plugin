@@ -4,9 +4,11 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Date;
 
-import com.nowsecure.auto.circleci.domain.NSAutoParameters;
-import com.nowsecure.auto.circleci.gateway.NSAutoGateway;
-import com.nowsecure.auto.circleci.utils.IOHelper;
+import com.nowsecure.auto.domain.NSAutoLogger;
+import com.nowsecure.auto.domain.NSAutoParameters;
+import com.nowsecure.auto.gateway.NSAutoGateway;
+import com.nowsecure.auto.utils.IOHelper;
+import com.nowsecure.auto.utils.IOHelperI;
 
 /**
  * This class defines business logic for uploading mobile binary and retrieving
@@ -16,7 +18,7 @@ import com.nowsecure.auto.circleci.utils.IOHelper;
  * @author sbhatti
  *
  */
-public class Main implements NSAutoParameters {
+public class Main implements NSAutoParameters, NSAutoLogger {
     private static final int TIMEOUT = 60000;
     private static final String PLUGIN_NAME = " circleci-nowsecure-auto-security-test v" + IOHelper.getVersion();
     private static final String DEFAULT_URL = "https://lab-api.nowsecure.com";
@@ -30,7 +32,7 @@ public class Main implements NSAutoParameters {
     private File artifactsDir;
     private String description;
 
-    private final IOHelper helper = new IOHelper(PLUGIN_NAME, TIMEOUT);
+    private final IOHelperI helper = new IOHelper(PLUGIN_NAME, TIMEOUT);
 
     @Override
     public String getDescription() {
@@ -136,7 +138,7 @@ public class Main implements NSAutoParameters {
     }
 
     public void execute() throws IOException {
-        new NSAutoGateway(this, helper).execute();
+        new NSAutoGateway(this, this, helper).execute();
     }
 
     @Override
@@ -271,12 +273,12 @@ public class Main implements NSAutoParameters {
     }
 
     @Override
-    public void info(Object msg) {
+    public void info(String msg) {
         System.out.println(new Date() + " " + PLUGIN_NAME + " " + msg);
     }
 
     @Override
-    public void error(Object msg) {
+    public void error(String msg) {
         System.err.println(new Date() + " " + PLUGIN_NAME + " " + msg);
 
     }

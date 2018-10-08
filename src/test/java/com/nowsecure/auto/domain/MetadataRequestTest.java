@@ -1,7 +1,9 @@
-package com.nowsecure.auto.circleci.domain;
+package com.nowsecure.auto.domain;
 
 import org.junit.Assert;
 import org.junit.Test;
+
+import com.nowsecure.auto.domain.MetadataRequest;
 
 public class MetadataRequestTest {
     @Test

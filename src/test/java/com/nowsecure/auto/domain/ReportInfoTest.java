@@ -1,4 +1,4 @@
-package com.nowsecure.auto.circleci.domain;
+package com.nowsecure.auto.domain;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -7,6 +7,8 @@ import java.nio.file.Paths;
 
 import org.junit.Assert;
 import org.junit.Test;
+
+import com.nowsecure.auto.domain.ReportInfo;
 
 public class ReportInfoTest {
     @Test

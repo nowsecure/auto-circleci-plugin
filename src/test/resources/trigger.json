@@ -1,0 +1,43 @@
+{
+  "application": "cda1",
+  "group": "good",
+  "account": "af952",
+  "platform": "android",
+  "package": "com.apkpure.aegon",
+  "task": 101,
+  "binary": "2bd733",
+  "creator": "4bcb9",
+  "created": "2018-10-04T21:52:18.658Z",
+  "config": {
+    "static": {
+      "urls_check": true,
+      "get_app_files": true,
+      "keysize_check": true,
+      "application_overprivileged_check": true
+    },
+    "dynamic": {
+      "actions": {
+        "find": [
+          "guest",
+          "next"
+        ],
+        "avoid": [
+          "facebook"
+        ]
+      },
+      "search_data": {
+      }
+    }
+  },
+  "status": {
+    "static": {
+      "state": "unknown"
+    },
+    "dynamic": {
+      "state": "unknown"
+    }
+  },
+  "events": {
+    "dynamic": []
+  }
+}
