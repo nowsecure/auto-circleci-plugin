@@ -220,7 +220,7 @@ public class NSAutoGatewayTest implements NSAutoParameters, NSAutoLogger, IOHelp
     }
 
     @Override
-    public String upload(String uri, String apiKey, String file) throws IOException {
+    public String upload(String uri, String apiKey, File file) throws IOException {
         if (uri.equals("https://lab-api.nowsecure.com/binary/?group=good")) {
             return new String(new IOHelper("test", 1).load(getClass().getResourceAsStream("/binary.json")));
         } else if (uri.equals("https://lab-api.nowsecure.com/binary/?group=preflight-error")) {

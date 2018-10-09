@@ -1,9 +1,11 @@
 package com.nowsecure.auto.utils;
 
+import java.io.File;
 import java.io.IOException;
 
 /**
  * Defines high level APIs to communicate with backend services
+ * 
  * @author sbhatti
  *
  */
@@ -14,6 +16,6 @@ public interface IOHelperI {
 
     String post(String uri, String apiKey) throws IOException;
 
-    String upload(String uri, String apiKey, String file) throws IOException;
+    String upload(String uri, String apiKey, File file) throws IOException;
 
 }

@@ -20,7 +20,7 @@ import com.nowsecure.auto.utils.IOHelperI;
  */
 public class Main implements NSAutoParameters, NSAutoLogger {
     private static final int TIMEOUT = 60000;
-    private static final String PLUGIN_NAME = " circleci-nowsecure-auto-security-test v" + IOHelper.getVersion();
+    private static final String PLUGIN_NAME = "circleci-nowsecure-auto-security-test";
     private static final String DEFAULT_URL = "https://lab-api.nowsecure.com";
     private String apiUrl = DEFAULT_URL;
     private String group;
@@ -274,12 +274,11 @@ public class Main implements NSAutoParameters, NSAutoLogger {
 
     @Override
     public void info(String msg) {
-        System.out.println(new Date() + " " + PLUGIN_NAME + " " + msg);
+        System.out.println(new Date() + " " + PLUGIN_NAME + " v" + IOHelper.getVersion() + " " + msg);
     }
 
     @Override
     public void error(String msg) {
-        System.err.println(new Date() + " " + PLUGIN_NAME + " " + msg);
-
+        System.err.println(new Date() + " " + PLUGIN_NAME + " v" + IOHelper.getVersion() + " " + msg);
     }
 }

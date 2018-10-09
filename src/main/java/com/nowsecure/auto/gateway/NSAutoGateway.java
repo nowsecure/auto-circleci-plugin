@@ -57,7 +57,7 @@ public class NSAutoGateway {
         //
         String url = buildUrl(BINARY_URL_SUFFIX);
         logger.info("uploading binary " + file.getAbsolutePath() + " to " + url);
-        String json = helper.upload(url, params.getApiKey(), file.getCanonicalPath());
+        String json = helper.upload(url, params.getApiKey(), file);
         String path = params.getArtifactsDir().getCanonicalPath() + NOWSECURE_AUTO_SECURITY_TEST_UPLOADED_BINARY_JSON;
         helper.save(path, json); //
         UploadRequest request = UploadRequest.fromJson(json);

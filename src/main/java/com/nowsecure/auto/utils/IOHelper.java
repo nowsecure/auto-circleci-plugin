@@ -3,6 +3,7 @@ package com.nowsecure.auto.utils;
 import java.io.BufferedWriter;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -35,8 +36,11 @@ public class IOHelper implements IOHelperI {
         this.timeout = timeout;
     }
 
-    public byte[] load(String file) throws IOException {
-        return Files.readAllBytes(Paths.get(file));
+    public byte[] load(File file) throws IOException {
+        if (!file.exists()) {
+            throw new FileNotFoundException("Could not find file " + file);
+        }
+        return Files.readAllBytes(Paths.get(file.getAbsolutePath()));
     }
 
     public static String getVersion() {
@@ -139,7 +143,7 @@ public class IOHelper implements IOHelperI {
      * java.lang.String, java.lang.String)
      */
     @Override
-    public String upload(String uri, String apiKey, String file) throws IOException {
+    public String upload(String uri, String apiKey, File file) throws IOException {
         URL url = new URL(uri);
         HttpURLConnection con = (HttpURLConnection) url.openConnection();
         con.setRequestMethod(POST);

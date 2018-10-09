@@ -9,12 +9,12 @@ import org.junit.Test;
 public class IOHelperTest {
     private static final String GROUP = "aaaa";
     private static final String API = "eyJ";
-    private static final String file = "apkpure_app_887.apk";
+    private static final File file = new File("apkpure_app_887.apk");
     private IOHelper helper = new IOHelper("test", 60000);
 
     @Test
     public void testLoad() throws Exception {
-        byte[] data = helper.load("src/test/resources/score.json");
+        byte[] data = helper.load(new File("src/test/resources/score.json"));
         Assert.assertTrue(data.length > 0);
     }
 
@@ -74,7 +74,7 @@ public class IOHelperTest {
 
     @Test
     public void testPostUpload() throws Exception {
-        String json = helper.upload("https://httpbin.org/post", API, "/tmp/save.txt");
+        String json = helper.upload("https://httpbin.org/post", API, new File("/tmp/save.txt"));
         Assert.assertNotNull(json);
     }
 
