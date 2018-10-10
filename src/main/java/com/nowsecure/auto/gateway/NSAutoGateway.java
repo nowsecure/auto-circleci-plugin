@@ -35,7 +35,7 @@ public class NSAutoGateway {
     }
 
     public void execute() throws IOException {
-        logger.info("Executing step for " + this);
+        logger.info("executing plugin for " + this);
         try {
             AssessmentRequest request = triggerAssessment(preflight(uploadBinary()));
 
