@@ -59,6 +59,17 @@ public class NSAutoGatewayTest implements NSAutoParameters, NSAutoLogger, IOHelp
     }
 
     @Test
+    public void testToString() throws Exception {
+        Assert.assertNotNull(gw.toString());
+        apiKey = null;
+        Assert.assertNotNull(gw.toString());
+        apiKey = "";
+        Assert.assertNotNull(gw.toString());
+        apiKey = "1234";
+        Assert.assertNotNull(gw.toString());
+    }
+
+    @Test
     public void testExecuteWithWait() throws Exception {
         waitMinutes = 30;
         gw.execute();

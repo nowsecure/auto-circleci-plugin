@@ -169,4 +169,12 @@ public class NSAutoGateway {
         return url;
     }
 
+    @Override
+    public String toString() {
+        String tok = params.getApiKey() != null && params.getApiKey().length() > 4
+                ? params.getApiKey().substring(0, 4) + "***" : "Unknown";
+        return "NSAutoGateway [artifactsDir=" + params.getArtifactsDir() + ", apiUrl=" + params.getApiUrl() + ", group="
+               + params.getGroup() + ", file=" + params.getFile() + ", waitMinutes=" + params.getWaitMinutes()
+               + ", scoreThreshold=" + params.getScoreThreshold() + ", apiKey=" + tok + "]";
+    }
 }
