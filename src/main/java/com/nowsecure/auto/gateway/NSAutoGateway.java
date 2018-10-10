@@ -68,7 +68,7 @@ public class NSAutoGateway {
 
     UploadRequest preflight(UploadRequest request) throws IOException, ParseException {
         String url = buildUrl("/binary/" + request.getBinary() + "/analysis");
-        logger.info("Executing preflight for digest " + request.getBinary() + " to " + url);
+        logger.info("executing preflight for digest " + request.getBinary() + " to " + url);
         try {
             String json = helper.get(url, params.getApiKey());
             File path = new File(
