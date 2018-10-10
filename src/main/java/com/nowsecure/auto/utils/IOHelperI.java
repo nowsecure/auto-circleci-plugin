@@ -10,7 +10,7 @@ import java.io.IOException;
  *
  */
 public interface IOHelperI {
-    void save(String path, String contents) throws IOException;
+    void save(File file, String contents) throws IOException;
 
     String get(String uri, String apiKey) throws IOException;
 

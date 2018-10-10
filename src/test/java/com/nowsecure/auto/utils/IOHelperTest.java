@@ -1,6 +1,7 @@
 package com.nowsecure.auto.utils;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 
 import org.junit.Assert;
@@ -16,6 +17,11 @@ public class IOHelperTest {
     public void testLoad() throws Exception {
         byte[] data = helper.load(new File("src/test/resources/score.json"));
         Assert.assertTrue(data.length > 0);
+    }
+
+    @Test(expected = FileNotFoundException.class)
+    public void testLoadUnknown() throws Exception {
+        helper.load(new File("src/test/resources/blah.json"));
     }
 
     @Test
@@ -57,7 +63,7 @@ public class IOHelperTest {
 
     @Test
     public void testSave() throws Exception {
-        helper.save("/tmp/save.txt", "test");
+        helper.save(new File("/tmp/save.txt"), "test");
     }
 
     @Test

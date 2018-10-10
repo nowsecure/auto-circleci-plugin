@@ -58,7 +58,8 @@ public class NSAutoGateway {
         String url = buildUrl(BINARY_URL_SUFFIX);
         logger.info("uploading binary " + file.getAbsolutePath() + " to " + url);
         String json = helper.upload(url, params.getApiKey(), file);
-        String path = params.getArtifactsDir().getCanonicalPath() + NOWSECURE_AUTO_SECURITY_TEST_UPLOADED_BINARY_JSON;
+        File path = new File(
+                params.getArtifactsDir().getCanonicalPath() + NOWSECURE_AUTO_SECURITY_TEST_UPLOADED_BINARY_JSON);
         helper.save(path, json); //
         UploadRequest request = UploadRequest.fromJson(json);
         logger.info("uploaded binary with digest " + request.getBinary() + " and saved output to " + path);
@@ -70,7 +71,8 @@ public class NSAutoGateway {
         logger.info("Executing preflight for digest " + request.getBinary() + " to " + url);
         try {
             String json = helper.get(url, params.getApiKey());
-            String path = params.getArtifactsDir().getCanonicalPath() + NOWSECURE_AUTO_SECURITY_TEST_PREFLIGHT_JSON;
+            File path = new File(
+                    params.getArtifactsDir().getCanonicalPath() + NOWSECURE_AUTO_SECURITY_TEST_PREFLIGHT_JSON);
             helper.save(path, json); //
             logger.info("saved preflight results to " + path);
             if (json.contains("error")) {
@@ -87,7 +89,8 @@ public class NSAutoGateway {
         String url = buildUrl(
                 "/app/" + uploadRequest.getPlatform() + "/" + uploadRequest.getPackageId() + "/assessment/");
         String json = helper.post(url, params.getApiKey());
-        String path = params.getArtifactsDir().getCanonicalPath() + NOWSECURE_AUTO_SECURITY_TEST_REPORT_REQUEST_JSON;
+        File path = new File(
+                params.getArtifactsDir().getCanonicalPath() + NOWSECURE_AUTO_SECURITY_TEST_REPORT_REQUEST_JSON);
         helper.save(path, json); //
         AssessmentRequest request = AssessmentRequest.fromJson(json);
         logger.info("triggered security test for digest " + uploadRequest.getBinary() + " to " + url
@@ -98,7 +101,8 @@ public class NSAutoGateway {
     ReportInfo[] getReportInfos(AssessmentRequest uploadInfo) throws IOException, ParseException {
         String resultsUrl = buildUrl("/app/" + uploadInfo.getPlatform() + "/" + uploadInfo.getPackageId()
                                      + "/assessment/" + uploadInfo.getTask() + "/results");
-        String resultsPath = params.getArtifactsDir().getCanonicalPath() + NOWSECURE_AUTO_SECURITY_TEST_REPORT_JSON;
+        File resultsPath = new File(
+                params.getArtifactsDir().getCanonicalPath() + NOWSECURE_AUTO_SECURITY_TEST_REPORT_JSON);
         String reportJson = helper.get(resultsUrl, params.getApiKey());
         ReportInfo[] reportInfos = ReportInfo.fromJson(reportJson);
         if (reportInfos.length > 0) {
@@ -110,7 +114,8 @@ public class NSAutoGateway {
 
     ScoreInfo getScoreInfo(AssessmentRequest uploadInfo) throws ParseException, IOException {
         String scoreUrl = buildUrl("/assessment/" + uploadInfo.getTask() + "/summary");
-        String scorePath = params.getArtifactsDir().getCanonicalPath() + NOWSECURE_AUTO_SECURITY_TEST_SCORE_JSON;
+        File scorePath = new File(
+                params.getArtifactsDir().getCanonicalPath() + NOWSECURE_AUTO_SECURITY_TEST_SCORE_JSON);
         String scoreJson = helper.get(scoreUrl, params.getApiKey());
         if (scoreJson.isEmpty()) {
             return null;

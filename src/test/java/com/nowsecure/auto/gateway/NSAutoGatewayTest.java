@@ -198,7 +198,8 @@ public class NSAutoGatewayTest implements NSAutoParameters, NSAutoLogger, IOHelp
     }
 
     @Override
-    public void save(String path, String contents) throws IOException {
+    public void save(File path, String contents) throws IOException {
+        path.mkdirs();
         try (BufferedWriter writer = new BufferedWriter(
                 new OutputStreamWriter(new FileOutputStream(path), StandardCharsets.UTF_8))) {
             writer.write(contents.trim());

@@ -80,9 +80,10 @@ public class IOHelper implements IOHelperI {
      * java.lang.String)
      */
     @Override
-    public void save(String path, String contents) throws IOException {
+    public void save(File file, String contents) throws IOException {
+        file.getParentFile().mkdirs();
         try (BufferedWriter writer = new BufferedWriter(
-                new OutputStreamWriter(new FileOutputStream(path), StandardCharsets.UTF_8))) {
+                new OutputStreamWriter(new FileOutputStream(file), StandardCharsets.UTF_8))) {
             writer.write(contents.trim());
         }
     }
