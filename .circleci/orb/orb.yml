@@ -9,7 +9,7 @@ executors:
     environment:
       TERM: dumb
 commands:
-  sectest:
+  mobile_security_test:
     description: Executes security test using NowSecure AUTO.
     parameters:
       # url for nowsecure auto API
