@@ -42,8 +42,8 @@ commands:
     steps:
     - attach_workspace:
         at: /tmp/workspace
-    - run: curl -Ls https://github.com/nowsecure/auto-circleci-plugin/archive/0.4.tar.gz | tar -xzf - -C .
-    - run: cd auto-circleci-plugin-0.4 && gradle run -Dauto.url=<< parameters.auto_url >> -Dauto.token=<< parameters.auto_token >> -Dauto.dir=<< parameters.auto_dir >> -Dauto.file=<< parameters.auto_file >> -Dauto.group=<< parameters.auto_group >> -Dauto.wait=<< parameters.auto_wait >> -Dauto.score=<< parameters.auto_score >>
+    - run: curl -Ls https://github.com/nowsecure/auto-circleci-plugin/archive/0.5.tar.gz | tar -xzf - -C .
+    - run: cd auto-circleci-plugin-0.5 && gradle run -Dauto.url=<< parameters.auto_url >> -Dauto.token=<< parameters.auto_token >> -Dauto.dir=<< parameters.auto_dir >> -Dauto.file=<< parameters.auto_file >> -Dauto.group=<< parameters.auto_group >> -Dauto.wait=<< parameters.auto_wait >> -Dauto.score=<< parameters.auto_score >>
     - persist_to_workspace:
         root: /tmp/workspace
         paths:
