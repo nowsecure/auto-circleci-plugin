@@ -52,6 +52,7 @@ circleci orb publish .circleci/orb/orb.yml nowsecure/ci-auto-orb@dev
 ```
 
 ## Resources
+- https://github.com/CircleCI-Public/config-preview-sdk/blob/master/docs/orbs-authoring.md
 - https://github.com/CircleCI-Public/config-preview-sdk/blob/master/docs/README.md
 - https://circleci.com/docs/2.0/language-java/
 - https://github.com/CircleCI-Public/config-preview-sdk/blob/master/docs/orbs-authoring.md
