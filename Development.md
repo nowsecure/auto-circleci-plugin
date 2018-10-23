@@ -1,4 +1,4 @@
-# NowSecure AUTO Jenkins Plugin
+# NowSecure AUTO CircleCI Plugin
 
 ## Building and Testing
 ```
@@ -30,10 +30,17 @@ The main config is defined in .circle/orb/orb.yml
 ```
 circleci namespace create nowsecure github nowsecure
 ```
+Note: This is already done so you don't need to recreate namespace.
+
+### Create auto orb
+```
+circleci orb create nowsecure/ci-auto-orb
+```
+Note: This is already done so you don't need to recreate orb.
 
 ### Validate config
 ```
-circleci orb validate .circle/orb/orb.yml
+circleci orb validate .circleci/orb/orb.yml
 ```
 
 ### Github release
@@ -41,10 +48,11 @@ Create new tag and release for the new version. Note: the orb.yml should referen
 
 ### Publish config
 ```
-circleci orb publish dev .circleci/orb/orb.yml ci-auto-test1 ci-auto-orb1  dev:alpha
+circleci orb publish .circleci/orb/orb.yml nowsecure/ci-auto-orb@dev
 ```
 
 ## Resources
+- https://github.com/CircleCI-Public/config-preview-sdk/blob/master/docs/README.md
 - https://circleci.com/docs/2.0/language-java/
 - https://github.com/CircleCI-Public/config-preview-sdk/blob/master/docs/orbs-authoring.md
 - https://circleci.com/docs/2.0/artifacts/
