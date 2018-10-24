@@ -60,6 +60,9 @@ public class IOHelper implements IOHelperI {
         if (file.isFile() && file.exists()) {
             return file;
         }
+        if (!parent.exists()) {
+            return file;
+        }
         Optional<Path> matched = Files
                 .find(Paths.get(parent.getCanonicalPath()), 10, new BiPredicate<Path, BasicFileAttributes>() {
                     @Override

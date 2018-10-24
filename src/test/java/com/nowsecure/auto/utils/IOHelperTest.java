@@ -46,6 +46,10 @@ public class IOHelperTest {
     public void testFindUnknown() throws Exception {
         File file = helper.find(new File("src"), new File("xxxscore.json"));
         Assert.assertNull(file);
+        file = helper.find(new File("yyyyy"), new File("xxxscore.json"));
+        Assert.assertNotNull(file);
+        file = helper.find(new File("xxxx"), new File("src"));
+        Assert.assertNotNull(file);
     }
 
     @Test
