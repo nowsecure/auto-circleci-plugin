@@ -51,12 +51,14 @@ public class IOHelper implements IOHelperI {
             scanner.close();
             in.close();
             return version;
-        } catch (RuntimeException | IOException e) {
+        } catch (RuntimeException e) {
+            return "1.0.0";
+        } catch (IOException e) {
             return "1.0.0";
         }
     }
 
-    public File find(File parent, File file) throws IOException {
+    public File find(final File parent, final File file) throws IOException {
         if (file.isFile() && file.exists()) {
             return file;
         }
@@ -85,10 +87,10 @@ public class IOHelper implements IOHelperI {
     @Override
     public void save(File file, String contents) throws IOException {
         file.getParentFile().mkdirs();
-        try (BufferedWriter writer = new BufferedWriter(
-                new OutputStreamWriter(new FileOutputStream(file), StandardCharsets.UTF_8))) {
-            writer.write(contents.trim());
-        }
+        BufferedWriter writer = new BufferedWriter(
+                new OutputStreamWriter(new FileOutputStream(file), StandardCharsets.UTF_8));
+        writer.write(contents.trim());
+        writer.close();
     }
 
     public byte[] load(InputStream in) throws IOException {

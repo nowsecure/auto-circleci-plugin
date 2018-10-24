@@ -184,7 +184,10 @@ public class Main implements NSAutoParameters, NSAutoLogger {
         try {
             main.execute();
             System.exit(0);
-        } catch (IOException | RuntimeException e) {
+        } catch (IOException e) {
+            System.err.println(e);
+            System.exit(1);
+        } catch (RuntimeException e) {
             System.err.println(e);
             System.exit(1);
         }

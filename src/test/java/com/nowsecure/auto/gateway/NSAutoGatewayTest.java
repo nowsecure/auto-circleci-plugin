@@ -32,8 +32,8 @@ public class NSAutoGatewayTest implements NSAutoParameters, NSAutoLogger, IOHelp
     private int scoreThreshold = 50;
     private String apiKey = "mykey";
     private String description = "blah";
-    private List<String> stdout = new ArrayList<>();
-    private List<String> stderr = new ArrayList<>();
+    private List<String> stdout = new ArrayList<String>();
+    private List<String> stderr = new ArrayList<String>();
     private NSAutoGateway gw = new NSAutoGateway(this, this, this) {
         @Override
         UploadRequest uploadBinary() throws IOException, ParseException {
@@ -200,10 +200,11 @@ public class NSAutoGatewayTest implements NSAutoParameters, NSAutoLogger, IOHelp
     @Override
     public void save(File path, String contents) throws IOException {
         path.getParentFile().mkdirs();
-        try (BufferedWriter writer = new BufferedWriter(
-                new OutputStreamWriter(new FileOutputStream(path), StandardCharsets.UTF_8))) {
-            writer.write(contents.trim());
-        }
+        BufferedWriter writer = new BufferedWriter(
+                new OutputStreamWriter(new FileOutputStream(path), StandardCharsets.UTF_8));
+        writer.write(contents.trim());
+        writer.close();
+
     }
 
     @Override
