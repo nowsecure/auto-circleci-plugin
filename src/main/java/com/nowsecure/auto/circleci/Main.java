@@ -277,11 +277,11 @@ public class Main implements NSAutoParameters, NSAutoLogger {
 
     @Override
     public void info(String msg) {
-        System.out.println(new Date() + " " + PLUGIN_NAME + " v" + IOHelper.getVersion() + " " + msg);
+        System.out.println(new Date() + "@" + IOHelper.LOCAL_HOST + ":" + PLUGIN_NAME + " v" + IOHelper.getVersion() + " " + msg);
     }
 
     @Override
     public void error(String msg) {
-        System.err.println(new Date() + " " + PLUGIN_NAME + " v" + IOHelper.getVersion() + " " + msg);
+        System.err.println(new Date() + "@" + IOHelper.LOCAL_HOST + ":" + PLUGIN_NAME + " v" + IOHelper.getVersion() + " " + msg);
     }
 }

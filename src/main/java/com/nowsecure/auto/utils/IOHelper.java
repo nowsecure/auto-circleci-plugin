@@ -10,6 +10,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
+import java.net.InetAddress;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.FileVisitOption;
@@ -30,6 +31,14 @@ public class IOHelper implements IOHelperI {
     private static final String POST = "POST";
     private String pluginName;
     private int timeout;
+    public static String LOCAL_HOST = "127.0.0.1";
+    static {
+        try {
+            InetAddress inetAddress = InetAddress.getLocalHost();
+            LOCAL_HOST = inetAddress.getHostName();
+        } catch (Exception e) {
+        }
+    }
 
     public IOHelper(String pluginName, int timeout) {
         this.pluginName = pluginName;

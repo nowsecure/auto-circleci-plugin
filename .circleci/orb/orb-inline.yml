@@ -77,8 +77,8 @@ orbs:
         - attach_workspace:
             at: /tmp/workspace
         - run: cp apkpure_app_887.apk /tmp/workspace/test.apk
-        - run: curl -Ls https://github.com/nowsecure/auto-circleci-plugin/archive/0.7.tar.gz | tar -xzf - -C .
-        - run: cd auto-circleci-plugin-0.7 && gradle run -Dauto.url=<< parameters.auto_url >> -Dauto.token=<< parameters.auto_token >> -Dauto.dir=<< parameters.auto_dir >> -Dauto.file=<< parameters.auto_file >> -Dauto.group=<< parameters.auto_group >> -Dauto.wait=<< parameters.auto_wait >> -Dauto.score=<< parameters.auto_score >>
+        - run: curl -Ls https://github.com/nowsecure/auto-circleci-plugin/archive/0.8.tar.gz | tar -xzf - -C .
+        - run: cd auto-circleci-plugin-0.8 && gradle run -Dauto.url=<< parameters.auto_url >> -Dauto.token=<< parameters.auto_token >> -Dauto.dir=<< parameters.auto_dir >> -Dauto.file=<< parameters.auto_file >> -Dauto.group=<< parameters.auto_group >> -Dauto.wait=<< parameters.auto_wait >> -Dauto.score=<< parameters.auto_score >>
         - persist_to_workspace:
             root: /tmp/workspace
             paths:
