@@ -64,6 +64,11 @@ circleci orb publish promote nowsecure/ci-auto-orb@dev:alpha patch
 circleci orb source nowsecure/ci-auto-orb@1.0.0
 ```
 
+### CircleCI URL
+```
+https://circleci.com/gh/nowsecure/auto-circleci-plugin
+```
+
 ## Resources
 - https://github.com/CircleCI-Public/config-preview-sdk/blob/master/docs/orbs-authoring.md
 - https://github.com/CircleCI-Public/config-preview-sdk/blob/master/docs/README.md
