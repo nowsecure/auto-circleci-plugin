@@ -59,6 +59,10 @@ or
 ```
 circleci orb publish promote nowsecure/ci-auto-orb@dev:alpha patch
 ```
+### Pulling source
+```
+circleci orb source nowsecure/ci-auto-orb@1.0.0
+```
 
 ## Resources
 - https://github.com/CircleCI-Public/config-preview-sdk/blob/master/docs/orbs-authoring.md
