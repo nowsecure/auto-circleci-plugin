@@ -31,18 +31,19 @@ public class IOHelper implements IOHelperI {
     private static final String POST = "POST";
     private String pluginName;
     private int timeout;
-    public static String LOCAL_HOST = "127.0.0.1";
-    static {
-        try {
-            InetAddress inetAddress = InetAddress.getLocalHost();
-            LOCAL_HOST = inetAddress.getHostName();
-        } catch (Exception e) {
-        }
-    }
 
     public IOHelper(String pluginName, int timeout) {
         this.pluginName = pluginName;
         this.timeout = timeout;
+    }
+
+    public static String getLocalHost() {
+        try {
+            InetAddress inetAddress = InetAddress.getLocalHost();
+            return inetAddress.getHostName();
+        } catch (Exception e) {
+            return "127.0.0.1";
+        }
     }
 
     public byte[] load(File file) throws IOException {

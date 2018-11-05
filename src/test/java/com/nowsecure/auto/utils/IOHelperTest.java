@@ -61,7 +61,7 @@ public class IOHelperTest {
     @Test
     public void testFind() throws Exception {
         new File("/tmp/test.out").createNewFile();
-        File file = helper.find(new File("/tmp"), new File("test.out"));
+        File file = helper.find(new File("/tmp/xx"), new File("test.out"));
         Assert.assertNotNull(file);
     }
 
