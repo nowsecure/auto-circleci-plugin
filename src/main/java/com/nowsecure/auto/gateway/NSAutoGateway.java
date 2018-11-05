@@ -82,7 +82,7 @@ public class NSAutoGateway {
         helper.save(path, json); //
         artifacts.add(path);
         UploadRequest request = UploadRequest.fromJson(json);
-        logger.info("uploaded binary with digest " + request.getBinary() + " and saved output to " + path);
+        logger.info("uploaded binary with digest " + request.getBinary() + " and saved output to " + path.getName());
         return request;
     }
 
@@ -95,7 +95,7 @@ public class NSAutoGateway {
                     params.getArtifactsDir().getCanonicalPath() + NOWSECURE_AUTO_SECURITY_TEST_PREFLIGHT_JSON);
             helper.save(path, json); //
             artifacts.add(path);
-            logger.info("saved preflight results to " + path);
+            logger.info("saved preflight results to " + path.getName());
             if (json.contains("error")) {
                 throw new IOException("Preflight failed");
             }
@@ -117,7 +117,7 @@ public class NSAutoGateway {
 
         AssessmentRequest request = AssessmentRequest.fromJson(json);
         logger.info("triggered security test for digest " + uploadRequest.getBinary() + " to " + url
-                    + " and saved output to " + path);
+                    + " and saved output to " + path.getName());
         return request;
     }
 
@@ -130,7 +130,7 @@ public class NSAutoGateway {
         if (reportInfos.length > 0) {
             helper.save(path, reportJson);
             artifacts.add(path);
-            logger.info("saved test report from " + resultsUrl + " to " + path);
+            logger.info("saved test report from " + resultsUrl + " to " + path.getName());
         }
         return reportInfos;
     }
@@ -144,7 +144,7 @@ public class NSAutoGateway {
         }
         helper.save(path, scoreJson);
         artifacts.add(path);
-        logger.info("saved score report from " + scoreUrl + " to " + path);
+        logger.info("saved score report from " + scoreUrl + " to " + path.getName());
         return ScoreInfo.fromJson(scoreJson);
     }
 
