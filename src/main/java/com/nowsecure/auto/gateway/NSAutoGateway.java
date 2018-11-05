@@ -4,6 +4,11 @@ import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import org.json.simple.parser.ParseException;
 
@@ -27,11 +32,25 @@ public class NSAutoGateway {
     private final NSAutoParameters params;
     private final NSAutoLogger logger;
     private final IOHelperI helper;
+    private List<File> artifacts = new ArrayList<File>();
 
+    //
     public NSAutoGateway(NSAutoParameters params, NSAutoLogger logger, IOHelperI helper) {
         this.params = params;
         this.logger = logger;
         this.helper = helper;
+    }
+
+    public Map<String, String> getArtifactContents(boolean delete) throws IOException {
+        Map<String, String> map = new HashMap<String, String>();
+        for (File file : artifacts) {
+            String contents = new String(helper.load(file), StandardCharsets.UTF_8);
+            map.put(file.getName(), contents);
+            if (delete) {
+                file.delete();
+            }
+        }
+        return map;
     }
 
     public void execute() throws IOException {
@@ -61,6 +80,7 @@ public class NSAutoGateway {
         File path = new File(
                 params.getArtifactsDir().getCanonicalPath() + NOWSECURE_AUTO_SECURITY_TEST_UPLOADED_BINARY_JSON);
         helper.save(path, json); //
+        artifacts.add(path);
         UploadRequest request = UploadRequest.fromJson(json);
         logger.info("uploaded binary with digest " + request.getBinary() + " and saved output to " + path);
         return request;
@@ -74,6 +94,7 @@ public class NSAutoGateway {
             File path = new File(
                     params.getArtifactsDir().getCanonicalPath() + NOWSECURE_AUTO_SECURITY_TEST_PREFLIGHT_JSON);
             helper.save(path, json); //
+            artifacts.add(path);
             logger.info("saved preflight results to " + path);
             if (json.contains("error")) {
                 throw new IOException("Preflight failed");
@@ -92,6 +113,8 @@ public class NSAutoGateway {
         File path = new File(
                 params.getArtifactsDir().getCanonicalPath() + NOWSECURE_AUTO_SECURITY_TEST_REPORT_REQUEST_JSON);
         helper.save(path, json); //
+        artifacts.add(path);
+
         AssessmentRequest request = AssessmentRequest.fromJson(json);
         logger.info("triggered security test for digest " + uploadRequest.getBinary() + " to " + url
                     + " and saved output to " + path);
@@ -101,27 +124,27 @@ public class NSAutoGateway {
     ReportInfo[] getReportInfos(AssessmentRequest uploadInfo) throws IOException, ParseException {
         String resultsUrl = buildUrl("/app/" + uploadInfo.getPlatform() + "/" + uploadInfo.getPackageId()
                                      + "/assessment/" + uploadInfo.getTask() + "/results");
-        File resultsPath = new File(
-                params.getArtifactsDir().getCanonicalPath() + NOWSECURE_AUTO_SECURITY_TEST_REPORT_JSON);
+        File path = new File(params.getArtifactsDir().getCanonicalPath() + NOWSECURE_AUTO_SECURITY_TEST_REPORT_JSON);
         String reportJson = helper.get(resultsUrl, params.getApiKey());
         ReportInfo[] reportInfos = ReportInfo.fromJson(reportJson);
         if (reportInfos.length > 0) {
-            helper.save(resultsPath, reportJson);
-            logger.info("saved test report from " + resultsUrl + " to " + resultsPath);
+            helper.save(path, reportJson);
+            artifacts.add(path);
+            logger.info("saved test report from " + resultsUrl + " to " + path);
         }
         return reportInfos;
     }
 
     ScoreInfo getScoreInfo(AssessmentRequest uploadInfo) throws ParseException, IOException {
         String scoreUrl = buildUrl("/assessment/" + uploadInfo.getTask() + "/summary");
-        File scorePath = new File(
-                params.getArtifactsDir().getCanonicalPath() + NOWSECURE_AUTO_SECURITY_TEST_SCORE_JSON);
+        File path = new File(params.getArtifactsDir().getCanonicalPath() + NOWSECURE_AUTO_SECURITY_TEST_SCORE_JSON);
         String scoreJson = helper.get(scoreUrl, params.getApiKey());
         if (scoreJson.isEmpty()) {
             return null;
         }
-        helper.save(scorePath, scoreJson);
-        logger.info("saved score report from " + scoreUrl + " to " + scorePath);
+        helper.save(path, scoreJson);
+        artifacts.add(path);
+        logger.info("saved score report from " + scoreUrl + " to " + path);
         return ScoreInfo.fromJson(scoreJson);
     }
 

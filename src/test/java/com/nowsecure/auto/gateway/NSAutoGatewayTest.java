@@ -2,11 +2,14 @@ package com.nowsecure.auto.gateway;
 
 import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -250,5 +253,13 @@ public class NSAutoGatewayTest implements NSAutoParameters, NSAutoLogger, IOHelp
             throw new RuntimeException();
         }
 
+    }
+
+    @Override
+    public byte[] load(File file) throws IOException {
+        if (!file.exists()) {
+            throw new FileNotFoundException("Could not find file " + file);
+        }
+        return Files.readAllBytes(Paths.get(file.getAbsolutePath()));
     }
 }

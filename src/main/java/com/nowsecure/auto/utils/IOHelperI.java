@@ -12,6 +12,8 @@ import java.io.IOException;
 public interface IOHelperI {
     void save(File file, String contents) throws IOException;
 
+    byte[] load(File file) throws IOException;
+
     String get(String uri, String apiKey) throws IOException;
 
     String post(String uri, String apiKey) throws IOException;
