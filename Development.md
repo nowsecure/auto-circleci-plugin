@@ -53,6 +53,7 @@ circleci orb publish .circleci/orb/orb.yml nowsecure/ci-auto-orb@dev:alpha
 
 ### Publish Prod config
 ```
+./gradlew
 circleci orb publish promote nowsecure/ci-auto-orb@dev:alpha major
 ```
 or
@@ -67,6 +68,11 @@ circleci orb source nowsecure/ci-auto-orb@1.0.0
 ### CircleCI URL
 ```
 https://circleci.com/gh/nowsecure/auto-circleci-plugin
+```
+
+### Registry
+```
+https://circleci.com/orbs/registry/
 ```
 
 ## Resources
