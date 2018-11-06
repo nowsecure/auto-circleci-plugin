@@ -32,6 +32,22 @@ orbs:
           auto_score:
             type: string
             default: "50"
+          # Specify test username for automation testing
+          auto_username:
+            type: string
+            default: ""
+          # Specify test password for automation testing
+          auto_password:
+            type: string
+            default: ""
+          # Specify flag to show status messages from automation testing
+          auto_show_status_messages:
+            type: string
+            default: "false"
+          # Specify flag to show status messages from automation testing
+          auto_stop_tests_on_status:
+            type: string
+            default: ""
         executor: inline_executor
         steps:
         - inline_command:
@@ -42,6 +58,10 @@ orbs:
             auto_file: <<parameters.auto_file>>
             auto_wait: <<parameters.auto_wait>>
             auto_score: <<parameters.auto_score>>
+            auto_username: <<parameters.auto_username>>
+            auto_password: <<parameters.auto_password>>
+            auto_show_status_messages: <<parameters.auto_show_status_messages>>
+            auto_stop_tests_on_status: <<parameters.auto_stop_tests_on_status>>
     commands:
       inline_command:
         parameters:
@@ -73,12 +93,28 @@ orbs:
           auto_score:
             type: string
             default: "50"
+          # Specify test username for automation testing
+          auto_username:
+            type: string
+            default: ""
+          # Specify test password for automation testing
+          auto_password:
+            type: string
+            default: ""
+          # Specify flag to show status messages from automation testing
+          auto_show_status_messages:
+            type: string
+            default: "false"
+          # Specify flag to show status messages from automation testing
+          auto_stop_tests_on_status:
+            type: string
+            default: ""
         steps:
         - attach_workspace:
             at: /tmp/workspace
         - run: cp apkpure_app_887.apk /tmp/workspace/test.apk
         - run: curl -Ls https://github.com/nowsecure/auto-circleci-plugin/archive/1.0.4.tar.gz | tar -xzf - -C .
-        - run: cd auto-circleci-plugin-1.0.4 && gradle run -Dauto.url=<< parameters.auto_url >> -Dauto.token=<< parameters.auto_token >> -Dauto.dir=<< parameters.auto_dir >> -Dauto.file=<< parameters.auto_file >> -Dauto.group=<< parameters.auto_group >> -Dauto.wait=<< parameters.auto_wait >> -Dauto.score=<< parameters.auto_score >>
+        - run: cd auto-circleci-plugin-1.0.4 && gradle run -Dauto.url=<< parameters.auto_url >> -Dauto.token=<< parameters.auto_token >> -Dauto.dir=<< parameters.auto_dir >> -Dauto.file=<< parameters.auto_file >> -Dauto.group=<< parameters.auto_group >> -Dauto.wait=<< parameters.auto_wait >> -Dauto.score=<< parameters.auto_score >> -Dauto.username=<<parameters.auto_username>> -Dauto.password=<<parameters.auto_password>> -Dauto.show.status.messages=<<parameters.auto_show_status_messages>> -Dauto.stop.tests.on.status=<<parameters.auto_stop_tests_on_status>>
         - persist_to_workspace:
             root: /tmp/workspace
             paths:

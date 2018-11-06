@@ -12,6 +12,7 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import org.json.simple.parser.ParseException;
 import org.junit.Assert;
@@ -35,6 +36,11 @@ public class NSAutoGatewayTest implements NSAutoParameters, NSAutoLogger, IOHelp
     private int scoreThreshold = 50;
     private String apiKey = "mykey";
     private String description = "blah";
+    private String username;
+    private String password;
+    private boolean showStatusMessages;
+    private String stopTestsForStatusMessage;
+
     private List<String> stdout = new ArrayList<String>();
     private List<String> stderr = new ArrayList<String>();
     private NSAutoGateway gw = new NSAutoGateway(this, this, this) {
@@ -58,7 +64,7 @@ public class NSAutoGatewayTest implements NSAutoParameters, NSAutoLogger, IOHelp
 
     @Before
     public void setup() {
-        NSAutoGateway.POLL_INTERVAL = 1;
+        NSAutoGateway.FIFTEEN_SECONDS = 1;
     }
 
     @Test
@@ -74,6 +80,7 @@ public class NSAutoGatewayTest implements NSAutoParameters, NSAutoLogger, IOHelp
 
     @Test
     public void testExecuteWithWait() throws Exception {
+        exceptionType = "";
         waitMinutes = 30;
         gw.execute();
     }
@@ -138,6 +145,32 @@ public class NSAutoGatewayTest implements NSAutoParameters, NSAutoLogger, IOHelp
     }
 
     @Test
+    public void testGetElapsedMinutes() throws Exception {
+        Assert.assertNotNull(gw.getElapsedMinutes(100));
+    }
+
+    @Test
+    public void testWaitForResultsAndShowMessages() throws Exception {
+        showStatusMessages = true;
+        AssessmentRequest req = new AssessmentRequest();
+        req.setTask(101L);
+        req.setPackageId("com.apkpure.aegon");
+        req.setPlatform("android");
+
+        gw.waitForResults(req);
+    }
+
+    @Test
+    public void testWaitForResults() throws Exception {
+        AssessmentRequest req = new AssessmentRequest();
+        req.setTask(101L);
+        req.setPackageId("com.apkpure.aegon");
+        req.setPlatform("android");
+
+        gw.waitForResults(req);
+    }
+
+    @Test
     public void testBuildUrl() throws Exception {
         Assert.assertEquals("https://nowsecure.com:443/path?group=group",
                 NSAutoGateway.buildUrl("/path", new URL("https://nowsecure.com:443"), "group"));
@@ -147,6 +180,15 @@ public class NSAutoGatewayTest implements NSAutoParameters, NSAutoLogger, IOHelp
                 NSAutoGateway.buildUrl("/path", new URL("https://nowsecure.com:443"), null));
     }
 
+    @Test
+    public void testGetArtifactContents() throws Exception {
+        File file = File.createTempFile("pre", "suf");
+        gw.artifacts.add(file);
+        Map<String, String> map = gw.getArtifactContents(false);
+        Assert.assertEquals(1, map.size());
+        map = gw.getArtifactContents(true);
+        Assert.assertEquals(1, map.size());
+    }
     /////
 
     @Override
@@ -166,7 +208,6 @@ public class NSAutoGatewayTest implements NSAutoParameters, NSAutoLogger, IOHelp
 
     @Override
     public String getApiUrl() {
-        // TODO Auto-generated method stub
         return apiUrl;
     }
 
@@ -201,6 +242,42 @@ public class NSAutoGatewayTest implements NSAutoParameters, NSAutoLogger, IOHelp
     }
 
     @Override
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    @Override
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    @Override
+    public boolean isShowStatusMessages() {
+        return showStatusMessages;
+    }
+
+    public void setShowStatusMessages(boolean showStatusMessages) {
+        this.showStatusMessages = showStatusMessages;
+    }
+
+    @Override
+    public String getStopTestsForStatusMessage() {
+        return stopTestsForStatusMessage;
+    }
+
+    public void setStopTestsForStatusMessage(String stopTestsForStatusMessage) {
+        this.stopTestsForStatusMessage = stopTestsForStatusMessage;
+    }
+
+    @Override
     public void save(File path, String contents) throws IOException {
         path.getParentFile().mkdirs();
         BufferedWriter writer = new BufferedWriter(
@@ -221,8 +298,10 @@ public class NSAutoGatewayTest implements NSAutoParameters, NSAutoLogger, IOHelp
             return new String(new IOHelper("test", 1).load(getClass().getResourceAsStream("/report.json")));
         } else if (uri.equals("https://lab-api.nowsecure.com/assessment/null/summary?group=empty-score")) {
             return "";
+        } else if (uri.equals("https://lab-api.nowsecure.com/analysis-events/101/dynamic/?group=good")) {
+            return "status";
         } else {
-            return throwException();
+            return throwException("Bad GET " + uri);
         }
     }
 
@@ -231,7 +310,7 @@ public class NSAutoGatewayTest implements NSAutoParameters, NSAutoLogger, IOHelp
         if (uri.equals("https://lab-api.nowsecure.com/app/android/com.apkpure.aegon/assessment/?group=good")) {
             return new String(new IOHelper("test", 1).load(getClass().getResourceAsStream("/trigger.json")));
         } else {
-            return throwException();
+            return throwException("Bad POST " + uri);
         }
     }
 
@@ -242,15 +321,15 @@ public class NSAutoGatewayTest implements NSAutoParameters, NSAutoLogger, IOHelp
         } else if (uri.equals("https://lab-api.nowsecure.com/binary/?group=preflight-error")) {
             return new String(new IOHelper("test", 1).load(getClass().getResourceAsStream("/error.json")));
         } else {
-            return throwException();
+            return throwException("UPLOAD " + uri);
         }
     }
 
-    private String throwException() throws IOException {
+    private String throwException(String msg) throws IOException {
         if (exceptionType.equals("IOException")) {
-            throw new IOException();
+            throw new IOException(msg);
         } else {
-            throw new RuntimeException();
+            throw new RuntimeException(msg);
         }
 
     }

@@ -7,12 +7,15 @@ import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.json.simple.parser.ParseException;
 
 import com.nowsecure.auto.domain.AssessmentRequest;
+import com.nowsecure.auto.domain.Message;
 import com.nowsecure.auto.domain.NSAutoLogger;
 import com.nowsecure.auto.domain.NSAutoParameters;
 import com.nowsecure.auto.domain.ReportInfo;
@@ -21,18 +24,19 @@ import com.nowsecure.auto.domain.UploadRequest;
 import com.nowsecure.auto.utils.IOHelperI;
 
 public class NSAutoGateway {
+    static int FIFTEEN_SECONDS = 15000;
     private static final String BINARY_URL_SUFFIX = "/binary/";
     private static final String NOWSECURE_AUTO_SECURITY_TEST_UPLOADED_BINARY_JSON = "/nowsecure-auto-security-test-uploaded-binary.json";
     private static final String NOWSECURE_AUTO_SECURITY_TEST_REPORT_REQUEST_JSON = "/nowsecure-auto-security-test-request.json";
     private static final String NOWSECURE_AUTO_SECURITY_TEST_PREFLIGHT_JSON = "/nowsecure-auto-security-test-preflight.json";
     private static final String NOWSECURE_AUTO_SECURITY_TEST_SCORE_JSON = "/nowsecure-auto-security-test-score.json";
     private static final String NOWSECURE_AUTO_SECURITY_TEST_REPORT_JSON = "/nowsecure-auto-security-test-report.json";
-    static int POLL_INTERVAL = 1000 * 60;
     //
     private final NSAutoParameters params;
     private final NSAutoLogger logger;
     private final IOHelperI helper;
-    private List<File> artifacts = new ArrayList<File>();
+    List<File> artifacts = new ArrayList<File>();
+    private Set<String> statusMessages = new HashSet<String>();
 
     //
     public NSAutoGateway(NSAutoParameters params, NSAutoLogger logger, IOHelperI helper) {
@@ -57,7 +61,6 @@ public class NSAutoGateway {
         logger.info("executing plugin for " + this);
         try {
             AssessmentRequest request = triggerAssessment(preflight(uploadBinary()));
-
             //
             if (params.getWaitMinutes() > 0) {
                 waitForResults(request);
@@ -121,6 +124,23 @@ public class NSAutoGateway {
         return request;
     }
 
+    void showStatusMessages(AssessmentRequest request) throws MalformedURLException {
+        String url = buildUrl("/analysis-events/" + request.getTask() + "/dynamic");
+        try {
+            String json = helper.get(url, params.getApiKey());
+            List<String> msgs = Message.fromJson(json);
+            for (String msg : msgs) {
+                if (!statusMessages.contains(msg)) {
+                    statusMessages.add(msg);
+                    logger.info("status: " + msg);
+                }
+            }
+        } catch (Exception e) {
+            logger.error("URL " + url + " failed " + e);
+        }
+    }
+
+    //
     ReportInfo[] getReportInfos(AssessmentRequest uploadInfo) throws IOException, ParseException {
         String resultsUrl = buildUrl("/app/" + uploadInfo.getPlatform() + "/" + uploadInfo.getPackageId()
                                      + "/assessment/" + uploadInfo.getTask() + "/results");
@@ -148,19 +168,31 @@ public class NSAutoGateway {
         return ScoreInfo.fromJson(scoreJson);
     }
 
-    void waitForResults(AssessmentRequest uploadInfo) throws IOException, ParseException {
+    void waitForResults(AssessmentRequest request) throws IOException, ParseException {
         //
         long started = System.currentTimeMillis();
         for (int min = 0; min < params.getWaitMinutes(); min++) {
-            logger.info("waiting test results for job " + uploadInfo.getTask() + getElapsedMinutes(started));
-            try {
-                Thread.sleep(POLL_INTERVAL);
-            } catch (InterruptedException e) {
-                Thread.interrupted();
-            } // wait a minute
-            ScoreInfo scoreInfo = getScoreInfo(uploadInfo);
+            if (params.isShowStatusMessages()) {
+                for (int j = 0; j < 4; j++) {
+                    try {
+                        Thread.sleep(FIFTEEN_SECONDS);
+                    } catch (InterruptedException e) {
+                        Thread.interrupted();
+                    }
+                    showStatusMessages(request);
+                }
+            } else {
+                logger.info("waiting test results for job " + request.getTask() + getElapsedMinutes(started));
+                try {
+                    Thread.sleep(FIFTEEN_SECONDS * 4);
+                } catch (InterruptedException e) {
+                    Thread.interrupted();
+                } // wait a minute
+            }
+            //
+            ScoreInfo scoreInfo = getScoreInfo(request);
             if (scoreInfo != null) {
-                getReportInfos(uploadInfo);
+                getReportInfos(request);
                 if (scoreInfo.getScore() < params.getScoreThreshold()) {
                     throw new IOException("Test failed because score (" + scoreInfo.getScore()
                                           + ") is lower than threshold " + params.getScoreThreshold());
@@ -169,12 +201,11 @@ public class NSAutoGateway {
                 return;
             }
         }
-        throw new IOException(
-                "Timedout" + getElapsedMinutes(started) + " while waiting for job " + uploadInfo.getTask());
+        throw new IOException("Timedout" + getElapsedMinutes(started) + " while waiting for job " + request.getTask());
     }
 
     String getElapsedMinutes(long started) {
-        long min = (System.currentTimeMillis() - started) / POLL_INTERVAL;
+        long min = (System.currentTimeMillis() - started) / (FIFTEEN_SECONDS * 4);
         if (min == 0) {
             return "";
         }

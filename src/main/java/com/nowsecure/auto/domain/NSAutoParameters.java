@@ -19,4 +19,12 @@ public interface NSAutoParameters {
 
     int getScoreThreshold();
 
+    String getUsername();
+
+    String getPassword();
+
+    boolean isShowStatusMessages();
+
+    String getStopTestsForStatusMessage();
+
 }
