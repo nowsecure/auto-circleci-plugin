@@ -72,6 +72,10 @@ https://circleci.com/gh/nowsecure/auto-circleci-plugin
 
 ### Registry
 ```
+https://circleci.com/orbs/registry/orb/nowsecure/ci-auto-orb
+```
+All Orbs
+```
 https://circleci.com/orbs/registry/
 ```
 
