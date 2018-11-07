@@ -6,46 +6,57 @@ orbs:
         parameters:
           # url for nowsecure auto API
           auto_url:
+            description: url for nowsecure auto API
             type: string
             default: https://lab-api.nowsecure.com
           # API token, visit https://docs.nowsecure.com/auto/integration-services/jenkins-integration to generate token
           auto_token:
+            description: API token, visit https://docs.nowsecure.com/auto/integration-services/jenkins-integration to generate token
             type: string
             default: $AUTO_TOKEN
           # Specify group if you belong to multiple groups
           auto_group:
+            description: Specify group if you belong to multiple groups
             type: string
             default: $AUTO_GROUP
           # Specify artifacts-dir where security artifacts will be stored
           auto_dir:
+            description: Specify artifacts-dir where security artifacts will be stored
             type: string
             default: "/tmp/workspace/nowsecure-auto-security-test"
           # Specify absolute path of mobile binary, you would need to attach workspace to this plugin step
           auto_file:
+            description: Specify absolute path of mobile binary, you would need to attach workspace to this plugin step
             type: string
             default: $AUTO_FILE
           # Specify maximum time to wait for results, if you specify 0 then plugin won't wait for the results
           auto_wait:
+            description: Specify maximum time to wait for results, if you specify 0 then plugin will not wait for the results
             type: string
             default: "30"
           # Specify minimum score the app should get from security testing, if you specify 0 then score won't be evaulated otherwise build will be marked as failure if security score is below this number
           auto_score:
+            description: Specify minimum score the app should get from security testing, if you specify 0 then score will not be evaulated otherwise build will be marked as failure if security score is below this number
             type: string
             default: "50"
           # Specify test username for automation testing
           auto_username:
+            description: Specify test username for automation testing
             type: string
             default: ""
           # Specify test password for automation testing
           auto_password:
+            description: Specify test password for automation testing
             type: string
             default: ""
           # Specify flag to show status messages from automation testing
           auto_show_status_messages:
+            description: Specify flag to show status messages from automation testing
             type: string
             default: "false"
           # Specify flag to show status messages from automation testing
           auto_stop_tests_on_status:
+            description: Specify flag to show status messages from automation testing
             type: string
             default: ""
         executor: inline_executor
@@ -67,54 +78,65 @@ orbs:
         parameters:
           # url for nowsecure auto API
           auto_url:
+            description: url for nowsecure auto API
             type: string
             default: https://lab-api.nowsecure.com
           # API token, visit https://docs.nowsecure.com/auto/integration-services/jenkins-integration to generate token
           auto_token:
+            description: API token, visit https://docs.nowsecure.com/auto/integration-services/jenkins-integration to generate token
             type: string
             default: $AUTO_TOKEN
           # Specify group if you belong to multiple groups
           auto_group:
+            description: Specify group if you belong to multiple groups
             type: string
             default: $AUTO_GROUP
           # Specify artifacts-dir where security artifacts will be stored
           auto_dir:
+            description: Specify artifacts-dir where security artifacts will be stored
             type: string
             default: "/tmp/workspace/nowsecure-auto-security-test"
           # Specify absolute path of mobile binary, you would need to attach workspace to this plugin step
           auto_file:
+            description: Specify absolute path of mobile binary, you would need to attach workspace to this plugin step
             type: string
             default: $AUTO_FILE
           # Specify maximum time to wait for results, if you specify 0 then plugin won't wait for the results
           auto_wait:
+            description: Specify maximum time to wait for results, if you specify 0 then plugin will not wait for the results
             type: string
             default: "30"
           # Specify minimum score the app should get from security testing, if you specify 0 then score won't be evaulated otherwise build will be marked as failure if security score is below this number
           auto_score:
+            description: Specify minimum score the app should get from security testing, if you specify 0 then score will not be evaulated otherwise build will be marked as failure if security score is below this number
             type: string
             default: "50"
           # Specify test username for automation testing
           auto_username:
+            description: Specify test username for automation testing
             type: string
             default: ""
           # Specify test password for automation testing
           auto_password:
+            description: Specify test password for automation testing
             type: string
             default: ""
           # Specify flag to show status messages from automation testing
           auto_show_status_messages:
+            description: Specify flag to show status messages from automation testing
             type: string
             default: "false"
           # Specify flag to show status messages from automation testing
           auto_stop_tests_on_status:
+            description: Specify flag to show status messages from automation testing
             type: string
             default: ""
         steps:
         - attach_workspace:
             at: /tmp/workspace
         - run: cp apkpure_app_887.apk /tmp/workspace/test.apk
-        - run: curl -Ls https://github.com/nowsecure/auto-circleci-plugin/archive/1.0.4.tar.gz | tar -xzf - -C .
-        - run: cd auto-circleci-plugin-1.0.4 && gradle run -Dauto.url=<< parameters.auto_url >> -Dauto.token=<< parameters.auto_token >> -Dauto.dir=<< parameters.auto_dir >> -Dauto.file=<< parameters.auto_file >> -Dauto.group=<< parameters.auto_group >> -Dauto.wait=<< parameters.auto_wait >> -Dauto.score=<< parameters.auto_score >> -Dauto.username=<<parameters.auto_username>> -Dauto.password=<<parameters.auto_password>> -Dauto.show.status.messages=<<parameters.auto_show_status_messages>> -Dauto.stop.tests.on.status=<<parameters.auto_stop_tests_on_status>>
+        - run: curl -Ls https://github.com/nowsecure/auto-circleci-plugin/archive/1.0.5.tar.gz | tar -xzf - -C .
+        - run: cd auto-circleci-plugin-1.0.5 && gradle run -Dauto.url=<< parameters.auto_url >> -Dauto.token=<< parameters.auto_token >> -Dauto.dir=<< parameters.auto_dir >> -Dauto.file=<< parameters.auto_file >> -Dauto.group=<< parameters.auto_group >> -Dauto.wait=<< parameters.auto_wait >> -Dauto.score=<< parameters.auto_score >> -Dauto.username=<<parameters.auto_username>> -Dauto.password=<<parameters.auto_password>> -Dauto.show.status.messages=<<parameters.auto_show_status_messages>> -Dauto.stop.tests.on.status=<<parameters.auto_stop_tests_on_status>>
         - persist_to_workspace:
             root: /tmp/workspace
             paths:
