@@ -50,13 +50,13 @@ public class AssessmentRequest extends MetadataRequest {
         request.setCreated((String) jsonObject.get("created"));
 
         if (request.getPackageId() == null || request.getPackageId().isEmpty()) {
-            throw new IOException("Preflight failed and package-id could not be found in JSON");
+            throw new IOException("Preflight failed and package-id could not be found in JSON in \n" + json + "\n");
         }
         if (request.getBinary() == null || request.getBinary().isEmpty()) {
-            throw new IOException("Binary not found in JSON");
+            throw new IOException("Binary not found in JSON in \n" + json + "\n");
         }
         if (request.getTask() == null) {
-            throw new IOException("Task not found in JSON");
+            throw new IOException("Task not found in JSON in \n" + json + "\n");
         }
         return request;
 
