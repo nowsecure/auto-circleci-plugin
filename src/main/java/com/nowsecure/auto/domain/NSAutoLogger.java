@@ -12,4 +12,5 @@ public interface NSAutoLogger {
 
     void error(String msg);
 
+    void debug(String msg);
 }

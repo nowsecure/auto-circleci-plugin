@@ -364,14 +364,23 @@ public class Main implements NSAutoParameters, NSAutoLogger {
 
     @Override
     public void info(String msg) {
-        System.out.println(new Date() + "@" + IOHelper.getLocalHost() + ":" + PLUGIN_NAME + " v" + IOHelper.getVersion()
-                           + " " + msg);
+        System.out.println("INFO " + new Date() + "@" + IOHelper.getLocalHost() + ":" + PLUGIN_NAME + " v"
+                           + IOHelper.getVersion() + " " + msg);
     }
 
     @Override
     public void error(String msg) {
-        System.err.println(new Date() + "@" + IOHelper.getLocalHost() + ":" + PLUGIN_NAME + " v" + IOHelper.getVersion()
-                           + " " + msg);
+        System.err.println("ERROR " + new Date() + "@" + IOHelper.getLocalHost() + ":" + PLUGIN_NAME + " v"
+                           + IOHelper.getVersion() + " " + msg);
+    }
+
+    @Override
+    public void debug(String msg) {
+        if (debug) {
+            System.out.println("DEBUG " + new Date() + "@" + IOHelper.getLocalHost() + ":" + PLUGIN_NAME + " v"
+                               + IOHelper.getVersion() + " " + msg);
+        }
+
     }
 
 }

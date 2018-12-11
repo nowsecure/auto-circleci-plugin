@@ -206,6 +206,11 @@ public class NSAutoGatewayTest implements NSAutoParameters, NSAutoLogger, IOHelp
     }
 
     @Override
+    public void debug(String msg) {
+        stdout.add(msg);
+    }
+
+    @Override
     public String getDescription() {
         return description;
     }

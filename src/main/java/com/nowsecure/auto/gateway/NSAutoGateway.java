@@ -275,11 +275,8 @@ public class NSAutoGateway {
 
     private void logEnv(String prefix) throws UnknownHostException {
         logger.info(prefix + " Local Hostname: " + InetAddress.getLocalHost() + ", debug " + params.isDebug());
-
-        if (params.isDebug()) {
-            logMap(prefix + " Environment variables:\n", System.getenv());
-            logMap(prefix + " System properties:\n", System.getProperties());
-        }
+        logMap(prefix + " Environment variables:\n", System.getenv());
+        logMap(prefix + " System properties:\n", System.getProperties());
     }
 
     private void logMap(String prefix, Map<?, ?> map) {
@@ -291,7 +288,7 @@ public class NSAutoGateway {
             }
             sb.append("\t" + e.getKey() + " = " + val + "\r\n");
         }
-        logger.info(prefix + sb + "\n");
+        logger.debug(prefix + sb + "\n");
     }
 
     @Override
