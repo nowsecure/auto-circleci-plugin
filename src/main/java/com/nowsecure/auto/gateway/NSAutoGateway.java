@@ -8,6 +8,7 @@ import java.net.HttpURLConnection;
 import java.net.InetAddress;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.net.UnknownHostException;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -48,7 +49,6 @@ public class NSAutoGateway {
         this.logger = logger;
         this.helper = helper;
 
-        logEnv();
         validate();
     }
 
@@ -66,6 +66,9 @@ public class NSAutoGateway {
 
     public void execute() throws IOException {
         logger.info("executing plugin for " + this);
+
+        logEnv();
+
         try {
             AssessmentRequest request = triggerAssessment(preflight(uploadBinary()));
             //
@@ -261,8 +264,9 @@ public class NSAutoGateway {
         }
     }
 
-    private void logEnv() {
+    private void logEnv() throws UnknownHostException {
         if (params.isDebug()) {
+            logger.info("Local Hostname: " + InetAddress.getLocalHost());
             logMap("Environment variables:\n", System.getenv());
             logMap("System properties:\n", System.getProperties());
         }
@@ -271,9 +275,13 @@ public class NSAutoGateway {
     private void logMap(String prefix, Map<?, ?> map) {
         StringBuilder sb = new StringBuilder();
         for (Map.Entry<?, ?> e : map.entrySet()) {
-            sb.append("\t" + e.getKey() + " = " + e.getValue() + "\r\n");
+            String val = e.getValue().toString();
+            if (val.length() > 50) {
+                val = val.substring(0, 50);
+            }
+            sb.append("\t" + e.getKey() + " = " + val + "\r\n");
         }
-        logger.info(prefix + sb);
+        logger.info(prefix + sb + "\n");
     }
 
     @Override
