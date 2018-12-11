@@ -27,4 +27,6 @@ public interface NSAutoParameters {
 
     String getStopTestsForStatusMessage();
 
+    boolean isDebug();
+
 }

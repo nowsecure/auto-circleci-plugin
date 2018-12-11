@@ -35,6 +35,7 @@ public class Main implements NSAutoParameters, NSAutoLogger {
     private String password;
     private boolean showStatusMessages;
     private String stopTestsForStatusMessage;
+    private boolean debug;
 
     private final IOHelperI helper = new IOHelper(PLUGIN_NAME, TIMEOUT);
 
@@ -175,6 +176,15 @@ public class Main implements NSAutoParameters, NSAutoLogger {
 
     public void setStopTestsForStatusMessage(String stopTestsForStatusMessage) {
         this.stopTestsForStatusMessage = stopTestsForStatusMessage;
+    }
+
+    @Override
+    public boolean isDebug() {
+        return debug;
+    }
+
+    public void setDebug(boolean debug) {
+        this.debug = debug;
     }
 
     public void execute() throws IOException {
@@ -352,5 +362,4 @@ public class Main implements NSAutoParameters, NSAutoLogger {
         System.err.println(new Date() + "@" + IOHelper.getLocalHost() + ":" + PLUGIN_NAME + " v" + IOHelper.getVersion()
                            + " " + msg);
     }
-
 }

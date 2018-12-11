@@ -1,7 +1,11 @@
 package com.nowsecure.auto.gateway;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.InetAddress;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
@@ -39,10 +43,13 @@ public class NSAutoGateway {
     private Set<String> statusMessages = new HashSet<String>();
 
     //
-    public NSAutoGateway(NSAutoParameters params, NSAutoLogger logger, IOHelperI helper) {
+    public NSAutoGateway(NSAutoParameters params, NSAutoLogger logger, IOHelperI helper) throws IOException {
         this.params = params;
         this.logger = logger;
         this.helper = helper;
+
+        logEnv();
+        validate();
     }
 
     public Map<String, String> getArtifactContents(boolean delete) throws IOException {
@@ -226,6 +233,47 @@ public class NSAutoGateway {
             url += "?group=" + group;
         }
         return url;
+    }
+
+    void validate() throws IOException {
+        URL url = null;
+        try {
+            url = new URL(params.getApiUrl());
+        } catch (Exception e) {
+            throw new IOException("Failed to parse URL " + params.getApiUrl() + " due to " + e);
+        }
+        //
+        try {
+            InetAddress.getByName(url.getHost());
+        } catch (Exception e) {
+            throw new IOException("Failed to lookup host URL " + url + " due to " + e);
+        }
+        //
+        try {
+            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+            conn.setRequestMethod("GET");
+            BufferedReader rd = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+            while (rd.readLine() != null) {
+            }
+            rd.close();
+        } catch (Exception e) {
+            throw new IOException("Failed to connect to URL " + url + " due to " + e);
+        }
+    }
+
+    private void logEnv() {
+        if (params.isDebug()) {
+            logMap("Environment variables:\n", System.getenv());
+            logMap("System properties:\n", System.getProperties());
+        }
+    }
+
+    private void logMap(String prefix, Map<?, ?> map) {
+        StringBuilder sb = new StringBuilder();
+        for (Map.Entry<?, ?> e : map.entrySet()) {
+            sb.append("\t" + e.getKey() + " = " + e.getValue() + "\r\n");
+        }
+        logger.info(prefix + sb);
     }
 
     @Override

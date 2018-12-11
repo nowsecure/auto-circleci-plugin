@@ -40,31 +40,33 @@ public class NSAutoGatewayTest implements NSAutoParameters, NSAutoLogger, IOHelp
     private String password;
     private boolean showStatusMessages;
     private String stopTestsForStatusMessage;
+    private boolean debug;
 
     private List<String> stdout = new ArrayList<String>();
     private List<String> stderr = new ArrayList<String>();
-    private NSAutoGateway gw = new NSAutoGateway(this, this, this) {
-        @Override
-        UploadRequest uploadBinary() throws IOException, ParseException {
-            if (exceptionType.equals("ParseException")) {
-                throw new ParseException(1);
-            }
-            return super.uploadBinary();
-        }
-
-        @Override
-        ScoreInfo getScoreInfo(AssessmentRequest uploadInfo) throws ParseException, IOException {
-            if (exceptionType.equals("timeout")) {
-                return null;
-            }
-            return super.getScoreInfo(uploadInfo);
-        }
-    };
+    private NSAutoGateway gw;
     private String exceptionType = "IOException";
 
     @Before
-    public void setup() {
+    public void setup() throws Exception {
         NSAutoGateway.FIFTEEN_SECONDS = 1;
+        gw = new NSAutoGateway(this, this, this) {
+            @Override
+            UploadRequest uploadBinary() throws IOException, ParseException {
+                if (exceptionType.equals("ParseException")) {
+                    throw new ParseException(1);
+                }
+                return super.uploadBinary();
+            }
+
+            @Override
+            ScoreInfo getScoreInfo(AssessmentRequest uploadInfo) throws ParseException, IOException {
+                if (exceptionType.equals("timeout")) {
+                    return null;
+                }
+                return super.getScoreInfo(uploadInfo);
+            }
+        };
     }
 
     @Test
@@ -278,6 +280,15 @@ public class NSAutoGatewayTest implements NSAutoParameters, NSAutoLogger, IOHelp
     }
 
     @Override
+    public boolean isDebug() {
+        return debug;
+    }
+
+    public void setDebug(boolean debug) {
+        this.debug = debug;
+    }
+
+    @Override
     public void save(File path, String contents) throws IOException {
         path.getParentFile().mkdirs();
         BufferedWriter writer = new BufferedWriter(
@@ -341,4 +352,5 @@ public class NSAutoGatewayTest implements NSAutoParameters, NSAutoLogger, IOHelp
         }
         return Files.readAllBytes(Paths.get(file.getAbsolutePath()));
     }
+
 }
