@@ -188,7 +188,7 @@ public class Main implements NSAutoParameters, NSAutoLogger {
     }
 
     public void execute() throws IOException {
-        new NSAutoGateway(this, this, helper).execute();
+        new NSAutoGateway(this, this, helper).execute(true);
     }
 
     @Override

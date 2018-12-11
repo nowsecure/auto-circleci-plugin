@@ -49,7 +49,8 @@ public class NSAutoGateway {
         this.logger = logger;
         this.helper = helper;
 
-        validate();
+        validate("Master");
+        logEnv("Master");
     }
 
     public Map<String, String> getArtifactContents(boolean delete) throws IOException {
@@ -64,10 +65,12 @@ public class NSAutoGateway {
         return map;
     }
 
-    public void execute() throws IOException {
+    public void execute(boolean master) throws IOException {
         logger.info("executing plugin for " + this);
-
-        logEnv();
+        if (!master) {
+            validate("Slave");
+            logEnv("Slave");
+        }
 
         try {
             AssessmentRequest request = triggerAssessment(preflight(uploadBinary()));
@@ -238,18 +241,18 @@ public class NSAutoGateway {
         return url;
     }
 
-    void validate() throws IOException {
+    void validate(String prefix) throws IOException {
         URL url = null;
         try {
             url = new URL(params.getApiUrl());
         } catch (Exception e) {
-            throw new IOException("Failed to parse URL " + params.getApiUrl() + " due to " + e);
+            throw new IOException(prefix + " Failed to parse URL " + params.getApiUrl() + " due to " + e);
         }
         //
         try {
             InetAddress.getByName(url.getHost());
         } catch (Exception e) {
-            throw new IOException("Failed to lookup host URL " + url + " due to " + e);
+            throw new IOException(prefix + " Failed to lookup host URL " + url + " due to " + e);
         }
         //
         try {
@@ -260,15 +263,15 @@ public class NSAutoGateway {
             }
             rd.close();
         } catch (Exception e) {
-            throw new IOException("Failed to connect to URL " + url + " due to " + e);
+            throw new IOException(prefix + " Failed to connect to URL " + url + " due to " + e);
         }
     }
 
-    private void logEnv() throws UnknownHostException {
+    private void logEnv(String prefix) throws UnknownHostException {
+        logger.info(prefix + " Local Hostname: " + InetAddress.getLocalHost() + ", debug " + params.isDebug());
         if (params.isDebug()) {
-            logger.info("Local Hostname: " + InetAddress.getLocalHost());
-            logMap("Environment variables:\n", System.getenv());
-            logMap("System properties:\n", System.getProperties());
+            logMap(prefix + " Environment variables:\n", System.getenv());
+            logMap(prefix + " System properties:\n", System.getProperties());
         }
     }
 
@@ -290,6 +293,7 @@ public class NSAutoGateway {
                 ? params.getApiKey().substring(0, 4) + "***" : "Unknown";
         return "NSAutoGateway [artifactsDir=" + params.getArtifactsDir() + ", apiUrl=" + params.getApiUrl() + ", group="
                + params.getGroup() + ", file=" + params.getFile() + ", waitMinutes=" + params.getWaitMinutes()
-               + ", scoreThreshold=" + params.getScoreThreshold() + ", apiKey=" + tok + "]";
+               + ", scoreThreshold=" + params.getScoreThreshold() + ", apiKey=" + tok + ", debug=" + params.isDebug()
+               + "]";
     }
 }

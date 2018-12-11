@@ -84,54 +84,54 @@ public class NSAutoGatewayTest implements NSAutoParameters, NSAutoLogger, IOHelp
     public void testExecuteWithWait() throws Exception {
         exceptionType = "";
         waitMinutes = 30;
-        gw.execute();
+        gw.execute(true);
     }
 
     @Test(expected = IOException.class)
     public void testExecuteWithLowScore() throws Exception {
         waitMinutes = 30;
         scoreThreshold = 80;
-        gw.execute();
+        gw.execute(true);
     }
 
     @Test(expected = IOException.class)
     public void testExecuteWithTimeout() throws Exception {
         exceptionType = "timeout";
         waitMinutes = 1;
-        gw.execute();
+        gw.execute(true);
     }
 
     @Test
     public void testExecuteWithoutWait() throws Exception {
         waitMinutes = 0;
-        gw.execute();
+        gw.execute(true);
     }
 
     @Test(expected = IOException.class)
     public void testExecuteIOException() throws Exception {
         exceptionType = "IOException";
         group = "bad";
-        gw.execute();
+        gw.execute(false);
     }
 
     @Test(expected = RuntimeException.class)
     public void testExecuteRTException() throws Exception {
         exceptionType = "RuntimeException";
         group = "bad";
-        gw.execute();
+        gw.execute(false);
     }
 
     @Test(expected = IOException.class)
     public void testExecuteParseException() throws Exception {
         exceptionType = "ParseException";
         group = "bad";
-        gw.execute();
+        gw.execute(false);
     }
 
     @Test(expected = IOException.class)
     public void testExecutePreflightError() throws Exception {
         group = "preflight-error";
-        gw.execute();
+        gw.execute(false);
     }
 
     @Test(expected = IOException.class)
