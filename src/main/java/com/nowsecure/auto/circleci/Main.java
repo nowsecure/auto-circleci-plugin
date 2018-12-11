@@ -6,6 +6,7 @@ import java.util.Date;
 
 import com.nowsecure.auto.domain.NSAutoLogger;
 import com.nowsecure.auto.domain.NSAutoParameters;
+import com.nowsecure.auto.domain.ProxySettings;
 import com.nowsecure.auto.gateway.NSAutoGateway;
 import com.nowsecure.auto.utils.IOHelper;
 import com.nowsecure.auto.utils.IOHelperI;
@@ -36,6 +37,7 @@ public class Main implements NSAutoParameters, NSAutoLogger {
     private boolean showStatusMessages;
     private String stopTestsForStatusMessage;
     private boolean debug;
+    private ProxySettings proxySettings = new ProxySettings();
 
     private final IOHelperI helper = new IOHelper(PLUGIN_NAME, TIMEOUT);
 
@@ -187,6 +189,15 @@ public class Main implements NSAutoParameters, NSAutoLogger {
         this.debug = debug;
     }
 
+    @Override
+    public ProxySettings getProxySettings() {
+        return proxySettings;
+    }
+
+    public void setProxySettings(ProxySettings proxySettings) {
+        this.proxySettings = proxySettings;
+    }
+
     public void execute() throws IOException {
         new NSAutoGateway(this, this, helper).execute(true);
     }
@@ -196,7 +207,7 @@ public class Main implements NSAutoParameters, NSAutoLogger {
         return "Main [apiUrl=" + apiUrl + ", group=" + group + ", file=" + file + ", waitMinutes=" + waitMinutes
                + ", breakBuildOnScore=" + breakBuildOnScore + ", scoreThreshold=" + scoreThreshold + ", artifactsDir="
                + artifactsDir + ", username=" + username + ", showStatusMessages=" + showStatusMessages
-               + ", stopTestsForStatusMessage=" + stopTestsForStatusMessage + "]";
+               + ", stopTestsForStatusMessage=" + stopTestsForStatusMessage + ", proxySettings=" + proxySettings + "]";
     }
 
     private static int parseInt(String name) {
@@ -362,4 +373,5 @@ public class Main implements NSAutoParameters, NSAutoLogger {
         System.err.println(new Date() + "@" + IOHelper.getLocalHost() + ":" + PLUGIN_NAME + " v" + IOHelper.getVersion()
                            + " " + msg);
     }
+
 }

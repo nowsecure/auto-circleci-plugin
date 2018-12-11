@@ -22,6 +22,7 @@ import org.junit.Test;
 import com.nowsecure.auto.domain.AssessmentRequest;
 import com.nowsecure.auto.domain.NSAutoLogger;
 import com.nowsecure.auto.domain.NSAutoParameters;
+import com.nowsecure.auto.domain.ProxySettings;
 import com.nowsecure.auto.domain.ScoreInfo;
 import com.nowsecure.auto.domain.UploadRequest;
 import com.nowsecure.auto.utils.IOHelper;
@@ -46,6 +47,7 @@ public class NSAutoGatewayTest implements NSAutoParameters, NSAutoLogger, IOHelp
     private List<String> stderr = new ArrayList<String>();
     private NSAutoGateway gw;
     private String exceptionType = "IOException";
+    private ProxySettings proxySettings = new ProxySettings();
 
     @Before
     public void setup() throws Exception {
@@ -286,6 +288,15 @@ public class NSAutoGatewayTest implements NSAutoParameters, NSAutoLogger, IOHelp
 
     public void setDebug(boolean debug) {
         this.debug = debug;
+    }
+
+    @Override
+    public ProxySettings getProxySettings() {
+        return proxySettings;
+    }
+
+    public void setProxySettings(ProxySettings proxySettings) {
+        this.proxySettings = proxySettings;
     }
 
     @Override

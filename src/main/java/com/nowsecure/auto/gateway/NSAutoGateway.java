@@ -51,6 +51,7 @@ public class NSAutoGateway {
 
         logEnv("Master");
         validate("Master");
+        params.getProxySettings().validate("Master");
     }
 
     public Map<String, String> getArtifactContents(boolean delete) throws IOException {
@@ -67,12 +68,15 @@ public class NSAutoGateway {
 
     public void execute(boolean master) throws IOException {
         logger.info("executing plugin for " + this);
-        if (!master) {
-            validate("Slave");
-            logEnv("Slave");
-        }
-
+        Map<String, String> settings = params.getProxySettings().overrideSystemProperties();
+        //
         try {
+            if (!master) {
+                logEnv("Slave");
+                validate("Slave");
+                params.getProxySettings().validate("Slave");
+            }
+            //
             AssessmentRequest request = triggerAssessment(preflight(uploadBinary()));
             //
             if (params.getWaitMinutes() > 0) {
@@ -84,6 +88,8 @@ public class NSAutoGateway {
             throw e;
         } catch (Exception e) {
             throw new IOException("Failed to run security test due to " + e, e);
+        } finally {
+            params.getProxySettings().restoreOldSettings(settings);
         }
     }
 
@@ -269,6 +275,7 @@ public class NSAutoGateway {
 
     private void logEnv(String prefix) throws UnknownHostException {
         logger.info(prefix + " Local Hostname: " + InetAddress.getLocalHost() + ", debug " + params.isDebug());
+
         if (params.isDebug()) {
             logMap(prefix + " Environment variables:\n", System.getenv());
             logMap(prefix + " System properties:\n", System.getProperties());
@@ -279,8 +286,8 @@ public class NSAutoGateway {
         StringBuilder sb = new StringBuilder();
         for (Map.Entry<?, ?> e : map.entrySet()) {
             String val = e.getValue().toString();
-            if (val.length() > 50) {
-                val = val.substring(0, 50);
+            if (val.length() > 80) {
+                val = val.substring(0, 80);
             }
             sb.append("\t" + e.getKey() + " = " + val + "\r\n");
         }
@@ -293,7 +300,7 @@ public class NSAutoGateway {
                 ? params.getApiKey().substring(0, 4) + "***" : "Unknown";
         return "NSAutoGateway [artifactsDir=" + params.getArtifactsDir() + ", apiUrl=" + params.getApiUrl() + ", group="
                + params.getGroup() + ", file=" + params.getFile() + ", waitMinutes=" + params.getWaitMinutes()
-               + ", scoreThreshold=" + params.getScoreThreshold() + ", apiKey=" + tok + ", debug=" + params.isDebug()
-               + "]";
+               + ", scoreThreshold=" + params.getScoreThreshold() + ", apiKey=" + tok + ", proxySettings="
+               + params.getProxySettings() + ", debug=" + params.isDebug() + "]";
     }
 }

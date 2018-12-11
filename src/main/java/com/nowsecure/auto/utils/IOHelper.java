@@ -37,6 +37,10 @@ public class IOHelper implements IOHelperI {
         this.timeout = timeout;
     }
 
+    public static boolean isEmpty(String s) {
+        return s == null || s.trim().isEmpty();
+    }
+
     public static String getLocalHost() {
         try {
             InetAddress inetAddress = InetAddress.getLocalHost();
