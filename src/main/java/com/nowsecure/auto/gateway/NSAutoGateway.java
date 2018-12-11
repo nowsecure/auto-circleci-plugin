@@ -49,8 +49,8 @@ public class NSAutoGateway {
         this.logger = logger;
         this.helper = helper;
 
-        validate("Master");
         logEnv("Master");
+        validate("Master");
     }
 
     public Map<String, String> getArtifactContents(boolean delete) throws IOException {
