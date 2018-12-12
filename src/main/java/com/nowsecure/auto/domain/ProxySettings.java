@@ -80,6 +80,8 @@ public class ProxySettings implements Serializable {
             Object value = map.get(name);
             if (value != null && value instanceof String && ((String) value).length() > 0) {
                 System.setProperty(name, (String) value);
+            } else {
+                System.clearProperty(name);
             }
         }
     }
