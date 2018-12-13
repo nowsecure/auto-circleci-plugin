@@ -20,6 +20,7 @@ import java.util.Set;
 import org.json.simple.parser.ParseException;
 
 import com.nowsecure.auto.domain.AssessmentRequest;
+import com.nowsecure.auto.domain.Color;
 import com.nowsecure.auto.domain.Message;
 import com.nowsecure.auto.domain.NSAutoLogger;
 import com.nowsecure.auto.domain.NSAutoParameters;
@@ -67,7 +68,7 @@ public class NSAutoGateway {
     }
 
     public void execute(boolean master) throws IOException {
-        logger.info("executing plugin for " + this);
+        logger.info("executing plugin for " + this, Color.Blue);
         Map<String, String> settings = params.getProxySettings().overrideSystemProperties();
         //
         try {
@@ -104,7 +105,8 @@ public class NSAutoGateway {
         helper.save(path, json); //
         artifacts.add(path);
         UploadRequest request = UploadRequest.fromJson(json);
-        logger.info("uploaded binary with digest " + request.getBinary() + " and saved output to " + path.getName());
+        logger.info("uploaded binary with digest " + request.getBinary() + " and saved output to " + path.getName(),
+                Color.Green);
         return request;
     }
 
@@ -117,7 +119,7 @@ public class NSAutoGateway {
                     params.getArtifactsDir().getCanonicalPath() + NOWSECURE_AUTO_SECURITY_TEST_PREFLIGHT_JSON);
             helper.save(path, json); //
             artifacts.add(path);
-            logger.info("saved preflight results to " + path.getName());
+            logger.info("saved preflight results to " + path.getName(), Color.Green);
             if (json.contains("error")) {
                 throw new IOException("Preflight failed");
             }
@@ -139,7 +141,7 @@ public class NSAutoGateway {
 
         AssessmentRequest request = AssessmentRequest.fromJson(json);
         logger.info("triggered security test for digest " + uploadRequest.getBinary() + " to " + url
-                    + " and saved output to " + path.getName());
+                    + " and saved output to " + path.getName(), Color.Blue);
         return request;
     }
 
@@ -169,7 +171,7 @@ public class NSAutoGateway {
         if (reportInfos.length > 0) {
             helper.save(path, reportJson);
             artifacts.add(path);
-            logger.info("saved test report from " + resultsUrl + " to " + path.getName());
+            logger.info("saved test report from " + resultsUrl + " to " + path.getName(), Color.Green);
         }
         return reportInfos;
     }
@@ -183,7 +185,7 @@ public class NSAutoGateway {
         }
         helper.save(path, scoreJson);
         artifacts.add(path);
-        logger.info("saved score report from " + scoreUrl + " to " + path.getName());
+        logger.info("saved score report from " + scoreUrl + " to " + path.getName(), Color.Green);
         return ScoreInfo.fromJson(scoreJson);
     }
 
@@ -216,7 +218,7 @@ public class NSAutoGateway {
                     throw new IOException("Test failed because score (" + scoreInfo.getScore()
                                           + ") is lower than threshold " + params.getScoreThreshold());
                 }
-                logger.info("test passed with score " + scoreInfo.getScore() + getElapsedMinutes(started));
+                logger.info("test passed with score " + scoreInfo.getScore() + getElapsedMinutes(started), Color.Green);
                 return;
             }
         }

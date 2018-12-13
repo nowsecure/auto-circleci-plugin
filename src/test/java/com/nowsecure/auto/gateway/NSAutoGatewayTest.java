@@ -20,6 +20,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import com.nowsecure.auto.domain.AssessmentRequest;
+import com.nowsecure.auto.domain.Color;
 import com.nowsecure.auto.domain.NSAutoLogger;
 import com.nowsecure.auto.domain.NSAutoParameters;
 import com.nowsecure.auto.domain.ProxySettings;
@@ -197,6 +198,11 @@ public class NSAutoGatewayTest implements NSAutoParameters, NSAutoLogger, IOHelp
 
     @Override
     public void info(String msg) {
+        stdout.add(msg);
+    }
+
+    @Override
+    public void info(String msg, Color color) {
         stdout.add(msg);
     }
 

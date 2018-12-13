@@ -9,6 +9,8 @@ package com.nowsecure.auto.domain;
 public interface NSAutoLogger {
 
     void info(String msg);
+    
+    void info(String msg, Color color);
 
     void error(String msg);
 

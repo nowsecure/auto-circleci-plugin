@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Date;
 
+import com.nowsecure.auto.domain.Color;
 import com.nowsecure.auto.domain.NSAutoLogger;
 import com.nowsecure.auto.domain.NSAutoParameters;
 import com.nowsecure.auto.domain.ProxySettings;
@@ -364,21 +365,29 @@ public class Main implements NSAutoParameters, NSAutoLogger {
 
     @Override
     public void info(String msg) {
-        System.out.println("INFO " + new Date() + "@" + IOHelper.getLocalHost() + ":" + PLUGIN_NAME + " v"
-                           + IOHelper.getVersion() + " " + msg);
+        info(msg, null);
+    }
+
+    @Override
+    public void info(String msg, Color color) {
+        if (color == null) {
+            color = Color.Black;
+        }
+        System.out.println(color.format("INFO " + new Date() + "@" + IOHelper.getLocalHost() + ":" + PLUGIN_NAME + " v"
+                                        + IOHelper.getVersion() + " " + msg));
     }
 
     @Override
     public void error(String msg) {
-        System.err.println("ERROR " + new Date() + "@" + IOHelper.getLocalHost() + ":" + PLUGIN_NAME + " v"
-                           + IOHelper.getVersion() + " " + msg);
+        System.err.println(Color.Red.format("ERROR " + new Date() + "@" + IOHelper.getLocalHost() + ":" + PLUGIN_NAME
+                                            + " v" + IOHelper.getVersion() + " " + msg));
     }
 
     @Override
     public void debug(String msg) {
         if (debug) {
-            System.out.println("DEBUG " + new Date() + "@" + IOHelper.getLocalHost() + ":" + PLUGIN_NAME + " v"
-                               + IOHelper.getVersion() + " " + msg);
+            System.out.println(Color.Black.format("DEBUG " + new Date() + "@" + IOHelper.getLocalHost() + ":"
+                                                  + PLUGIN_NAME + " v" + IOHelper.getVersion() + " " + msg));
         }
 
     }
