@@ -93,7 +93,9 @@ public class NSAutoGateway {
         } catch (Exception e) {
             throw new IOException("Failed to run security test due to " + e, e);
         } finally {
-            params.getProxySettings().restoreOldSettings(settings);
+            if (params.getProxySettings() != null) {
+                params.getProxySettings().restoreOldSettings(settings);
+            }
         }
     }
 
