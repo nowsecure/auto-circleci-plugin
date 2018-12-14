@@ -52,7 +52,9 @@ public class NSAutoGateway {
 
         logEnv("Master");
         validate("Master");
-        params.getProxySettings().validate("Master");
+        if (params.getProxySettings() != null) {
+            params.getProxySettings().validate("Master");
+        }
     }
 
     public Map<String, String> getArtifactContents(boolean delete) throws IOException {
@@ -69,7 +71,8 @@ public class NSAutoGateway {
 
     public void execute(boolean master) throws IOException {
         logger.info("executing plugin for " + this, Color.Blue);
-        Map<String, String> settings = params.getProxySettings().overrideSystemProperties();
+        Map<String, String> settings = params.getProxySettings() != null
+                ? params.getProxySettings().overrideSystemProperties() : new HashMap<String, String>();
         //
         try {
             if (!master) {
@@ -141,7 +144,8 @@ public class NSAutoGateway {
 
         AssessmentRequest request = AssessmentRequest.fromJson(json);
         logger.info("triggered security test for digest " + uploadRequest.getBinary() + " to " + url
-                    + " and saved output to " + path.getName(), Color.Blue);
+                    + " and saved output to " + path.getName(),
+                Color.Blue);
         return request;
     }
 
