@@ -16,7 +16,7 @@ public class ProxySettings implements Serializable {
     private String proxyServer = "";
     private int proxyPort;
     private String userName = "";
-    private String password = "";
+    private String proxyPass = "";
     private String noProxyHost = "";
 
     public String getProxyServer() {
@@ -47,13 +47,13 @@ public class ProxySettings implements Serializable {
         }
     }
 
-    public String getPassword() {
-        return password;
+    public String getProxyPass() {
+        return proxyPass;
     }
 
-    public void setPassword(String password) {
-        if (password != null) {
-            this.password = password;
+    public void setProxyPass(String proxyPass) {
+        if (proxyPass != null) {
+            this.proxyPass = proxyPass;
         }
     }
 
@@ -93,9 +93,9 @@ public class ProxySettings implements Serializable {
             System.setProperty("http.proxyPort", String.valueOf(proxyPort));
             System.setProperty("https.proxyHost", proxyServer.trim());
             System.setProperty("https.proxyPort", String.valueOf(proxyPort));
-            if (!IOHelper.isEmpty(userName) && !IOHelper.isEmpty(password)) {
+            if (!IOHelper.isEmpty(userName) && !IOHelper.isEmpty(proxyPass)) {
                 System.setProperty("http.proxyUser", userName);
-                System.setProperty("http.proxyPassword", password);
+                System.setProperty("http.proxyPassword", proxyPass);
             }
             if (!IOHelper.isEmpty(noProxyHost)) {
                 System.setProperty("http.nonProxyHosts", noProxyHost);

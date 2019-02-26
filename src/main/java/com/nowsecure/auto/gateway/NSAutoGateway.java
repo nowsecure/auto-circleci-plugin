@@ -70,10 +70,10 @@ public class NSAutoGateway {
     }
 
     public void execute(boolean master) throws IOException {
-        logger.info("executing plugin for " + this, Color.Blue);
         Map<String, String> settings = params.getProxySettings() != null
                 ? params.getProxySettings().overrideSystemProperties() : new HashMap<String, String>();
         //
+        logger.info("[master: " + master + "] executing plugin for " + this, Color.Blue);
         try {
             if (!master) {
                 logEnv("Slave");
@@ -277,26 +277,31 @@ public class NSAutoGateway {
             }
             rd.close();
         } catch (Exception e) {
-            throw new IOException(prefix + " Failed to connect to URL " + url + " due to " + e);
+            throw new IOException(prefix + " Failed to connect to URL " + url + " due to " + e + "\n" + this, e);
         }
     }
 
     private void logEnv(String prefix) throws UnknownHostException {
-        logger.info(prefix + " Local Hostname: " + InetAddress.getLocalHost() + ", debug " + params.isDebug());
-        logMap(prefix + " Environment variables:\n", System.getenv());
+        logger.info(prefix + " Local Hostname: " + InetAddress.getLocalHost() + ", debug " + params.isDebug(),
+                Color.Blue);
+        // logMap(prefix + " Environment variables:\n", System.getenv(),
+        // Color.Blue);
         logMap(prefix + " System properties:\n", System.getProperties());
     }
 
     private void logMap(String prefix, Map<?, ?> map) {
         StringBuilder sb = new StringBuilder();
         for (Map.Entry<?, ?> e : map.entrySet()) {
-            String val = e.getValue().toString();
-            if (val.length() > 80) {
-                val = val.substring(0, 80);
+            String key = e.getKey().toString().toLowerCase();
+            if (!key.contains("password") && key.matches(".*(http|proxy).*")) {
+                String val = e.getValue().toString();
+                if (val.length() > 80) {
+                    val = val.substring(0, 80);
+                }
+                sb.append("\t" + e.getKey() + " = " + val + "\r\n");
             }
-            sb.append("\t" + e.getKey() + " = " + val + "\r\n");
         }
-        logger.debug(prefix + sb + "\n");
+        logger.info(prefix + sb + "\n", Color.Blue);
     }
 
     @Override
