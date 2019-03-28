@@ -23,7 +23,9 @@ import java.util.Scanner;
 import java.util.function.BiPredicate;
 
 public class IOHelper implements IOHelperI {
+    private static final String CONTENT_LENGTH = "Content-Length";
     static String VERSION_TXT = "/version.txt";
+    static String JVERSION_TXT = "/jversion.txt";
     private static final String USER_AGENT = "User-Agent";
     private static final String GET = "GET";
     private static final String CONTENT_TYPE = "Content-Type";
@@ -31,7 +33,6 @@ public class IOHelper implements IOHelperI {
     private static final String POST = "POST";
     private String pluginName;
     private int timeout;
-    public static Class<?> resourceClass = IOHelper.class;
 
     public IOHelper(String pluginName, int timeout) {
         this.pluginName = pluginName;
@@ -60,7 +61,10 @@ public class IOHelper implements IOHelperI {
 
     public static String getVersion() {
         try {
-            InputStream in = resourceClass.getResourceAsStream(VERSION_TXT);
+            InputStream in = IOHelper.class.getResourceAsStream(JVERSION_TXT);
+            if (in == null) {
+                in = IOHelper.class.getResourceAsStream(VERSION_TXT);
+            }
             Scanner scanner = new Scanner(in, "UTF-8");
             String version = scanner.next();
             scanner.close();
@@ -165,13 +169,14 @@ public class IOHelper implements IOHelperI {
      */
     @Override
     public String upload(String uri, String apiKey, File file) throws IOException {
+        byte[] binary = load(file);
         URL url = new URL(uri);
         HttpURLConnection con = (HttpURLConnection) url.openConnection();
         con.setRequestMethod(POST);
         initConnection(apiKey, con);
+        con.setRequestProperty(CONTENT_LENGTH, String.valueOf(binary.length));
         con.setDoOutput(true);
         OutputStream out = con.getOutputStream();
-        byte[] binary = load(file);
         out.write(binary);
         out.flush();
         out.close();
