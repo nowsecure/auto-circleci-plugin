@@ -49,9 +49,9 @@ public class NSAutoGateway {
         this.params = params;
         this.logger = logger;
         this.helper = helper;
-
-        logEnv("Master");
-        validate("Master");
+        //
+        // logEnv("Master");
+        // validate("Master");
         if (params.getProxySettings() != null) {
             params.getProxySettings().validate("Master");
         }
@@ -73,7 +73,7 @@ public class NSAutoGateway {
         Map<String, String> settings = params.getProxySettings() != null
                 ? params.getProxySettings().overrideSystemProperties() : new HashMap<String, String>();
         //
-        logger.info("[master: " + master + "] executing plugin for " + this, Color.Blue);
+        logger.info("[master: " + master + "] executing plugin for " + this);
         try {
             if (!master) {
                 logEnv("Slave");
@@ -146,8 +146,7 @@ public class NSAutoGateway {
 
         AssessmentRequest request = AssessmentRequest.fromJson(json);
         logger.info("triggered security test for digest " + uploadRequest.getBinary() + " to " + url
-                    + " and saved output to " + path.getName(),
-                Color.Blue);
+                    + " and saved output to " + path.getName());
         return request;
     }
 
@@ -282,8 +281,7 @@ public class NSAutoGateway {
     }
 
     private void logEnv(String prefix) throws UnknownHostException {
-        logger.info(prefix + " Local Hostname: " + InetAddress.getLocalHost() + ", debug " + params.isDebug(),
-                Color.Blue);
+        logger.info(prefix + " Local Hostname: " + InetAddress.getLocalHost() + ", debug " + params.isDebug());
         // logMap(prefix + " Environment variables:\n", System.getenv(),
         // Color.Blue);
         logMap(prefix + " System properties:\n", System.getProperties());
@@ -301,7 +299,7 @@ public class NSAutoGateway {
                 sb.append("\t" + e.getKey() + " = " + val + "\r\n");
             }
         }
-        logger.info(prefix + sb + "\n", Color.Blue);
+        logger.info(prefix + sb + "\n");
     }
 
     @Override

@@ -31,6 +31,7 @@ public class IOHelper implements IOHelperI {
     private static final String POST = "POST";
     private String pluginName;
     private int timeout;
+    public static Class<?> resourceClass = IOHelper.class;
 
     public IOHelper(String pluginName, int timeout) {
         this.pluginName = pluginName;
@@ -59,7 +60,7 @@ public class IOHelper implements IOHelperI {
 
     public static String getVersion() {
         try {
-            InputStream in = IOHelper.class.getResourceAsStream(VERSION_TXT);
+            InputStream in = resourceClass.getResourceAsStream(VERSION_TXT);
             Scanner scanner = new Scanner(in, "UTF-8");
             String version = scanner.next();
             scanner.close();

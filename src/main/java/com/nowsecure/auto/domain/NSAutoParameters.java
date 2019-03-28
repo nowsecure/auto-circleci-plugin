@@ -29,5 +29,7 @@ public interface NSAutoParameters {
 
     boolean isDebug();
 
+    boolean isProxyEnabled();
+
     ProxySettings getProxySettings();
 }

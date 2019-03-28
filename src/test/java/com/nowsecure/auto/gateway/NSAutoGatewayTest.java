@@ -375,4 +375,9 @@ public class NSAutoGatewayTest implements NSAutoParameters, NSAutoLogger, IOHelp
         return Files.readAllBytes(Paths.get(file.getAbsolutePath()));
     }
 
+    @Override
+    public boolean isProxyEnabled() {
+        return false;
+    }
+
 }

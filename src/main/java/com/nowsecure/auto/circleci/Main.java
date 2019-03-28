@@ -38,6 +38,8 @@ public class Main implements NSAutoParameters, NSAutoLogger {
     private boolean showStatusMessages;
     private String stopTestsForStatusMessage;
     private boolean debug;
+    private boolean proxyEnabled;
+    //
     private ProxySettings proxySettings = new ProxySettings();
 
     private final IOHelperI helper = new IOHelper(PLUGIN_NAME, TIMEOUT);
@@ -199,6 +201,15 @@ public class Main implements NSAutoParameters, NSAutoLogger {
         this.proxySettings = proxySettings;
     }
 
+    @Override
+    public boolean isProxyEnabled() {
+        return proxyEnabled;
+    }
+
+    public void setProxyEnabled(boolean proxyEnabled) {
+        this.proxyEnabled = proxyEnabled;
+    }
+
     public void execute() throws IOException {
         new NSAutoGateway(this, this, helper).execute(true);
     }
@@ -208,7 +219,8 @@ public class Main implements NSAutoParameters, NSAutoLogger {
         return "Main [apiUrl=" + apiUrl + ", group=" + group + ", file=" + file + ", waitMinutes=" + waitMinutes
                + ", breakBuildOnScore=" + breakBuildOnScore + ", scoreThreshold=" + scoreThreshold + ", artifactsDir="
                + artifactsDir + ", username=" + username + ", showStatusMessages=" + showStatusMessages
-               + ", stopTestsForStatusMessage=" + stopTestsForStatusMessage + ", proxySettings=" + proxySettings + "]";
+               + ", stopTestsForStatusMessage=" + stopTestsForStatusMessage + ", proxyEnabled=" + proxyEnabled
+               + ", proxySettings=" + proxySettings + "]";
     }
 
     private static int parseInt(String name) {
