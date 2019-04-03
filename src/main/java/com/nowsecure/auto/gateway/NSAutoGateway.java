@@ -27,6 +27,7 @@ import com.nowsecure.auto.domain.NSAutoParameters;
 import com.nowsecure.auto.domain.ReportInfo;
 import com.nowsecure.auto.domain.ScoreInfo;
 import com.nowsecure.auto.domain.UploadRequest;
+import com.nowsecure.auto.utils.IOHelper;
 import com.nowsecure.auto.utils.IOHelperI;
 
 public class NSAutoGateway {
@@ -103,7 +104,8 @@ public class NSAutoGateway {
         File file = params.getFile();
         //
         String url = buildUrl(BINARY_URL_SUFFIX);
-        logger.info("uploading binary " + file.getAbsolutePath() + " of size " + file.length() + " bytes to " + url);
+        logger.info("uploading binary " + file.getAbsolutePath() + " of size " + file.length() + " bytes, digest "
+                    + IOHelper.toDigest(file, "SHA-1") + " to " + url);
         String json = helper.upload(url, params.getApiKey(), file);
         File path = new File(
                 params.getArtifactsDir().getCanonicalPath() + NOWSECURE_AUTO_SECURITY_TEST_UPLOADED_BINARY_JSON);

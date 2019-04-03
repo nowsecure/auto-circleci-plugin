@@ -55,10 +55,7 @@ public class IOHelper implements IOHelperI {
     }
 
     public byte[] load(File file) throws IOException {
-        if (!file.exists()) {
-            throw new FileNotFoundException("Could not find file " + file);
-        }
-        return Files.readAllBytes(Paths.get(file.getAbsolutePath()));
+        return _load(file);
     }
 
     public static String getVersion() {
@@ -199,7 +196,15 @@ public class IOHelper implements IOHelperI {
         con.setInstanceFollowRedirects(false);
     }
 
-    static String toDigest(byte[] b, String algorithm) {
+    public static String toDigest(File file, String algorithm) {
+        try {
+            return toDigest(_load(file), algorithm);
+        } catch (Exception e) {
+            return e.getMessage();
+        }
+    }
+
+    public static String toDigest(byte[] b, String algorithm) {
         try {
             MessageDigest md = MessageDigest.getInstance(algorithm);
             return algorithm + "=" + byteArrayToHexString(md.digest(b), b.length);
@@ -214,5 +219,12 @@ public class IOHelper implements IOHelperI {
             sb.append(Integer.toString((b[i] & 0xff) + 0x100, 16).substring(1));
         }
         return sb.toString();
+    }
+
+    private static byte[] _load(File file) throws IOException {
+        if (!file.exists()) {
+            throw new FileNotFoundException("Could not find file " + file);
+        }
+        return Files.readAllBytes(Paths.get(file.getAbsolutePath()));
     }
 }
