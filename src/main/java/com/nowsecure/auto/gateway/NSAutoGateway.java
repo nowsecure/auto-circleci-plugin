@@ -104,7 +104,7 @@ public class NSAutoGateway {
         File file = params.getFile();
         //
         String url = buildUrl(BINARY_URL_SUFFIX);
-        logger.info("uploading binary " + file.getAbsolutePath() + " of size " + file.length() + " bytes, digest "
+        logger.info("uploading binary " + file.getAbsolutePath() + " of size " + file.length() + " bytes, hash "
                     + IOHelper.toDigest(file, "SHA-1") + " to " + url);
         String json = helper.upload(url, params.getApiKey(), file);
         File path = new File(
