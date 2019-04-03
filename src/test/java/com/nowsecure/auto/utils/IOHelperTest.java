@@ -36,6 +36,18 @@ public class IOHelperTest {
     }
 
     @Test
+    public void testDigest() throws Exception {
+        String digest = IOHelper.toDigest("My bytes".getBytes(), "SHA1");
+        Assert.assertEquals("SHA1=6debb9bd4c98fb74", digest);
+    }
+
+    @Test
+    public void testDigestBad() throws Exception {
+        String digest = IOHelper.toDigest("My bytes".getBytes(), "Bad");
+        Assert.assertEquals("B16=4d79206279746573", digest);
+    }
+
+    @Test
     public void testGetVersionUnknown() throws Exception {
         IOHelper.VERSION_TXT = "xxx";
         String version = IOHelper.getVersion();
@@ -86,6 +98,18 @@ public class IOHelperTest {
     public void testPostUpload() throws Exception {
         String json = helper.upload("https://httpbin.org/post", API, new File("/tmp/save.txt"));
         Assert.assertNotNull(json);
+    }
+
+    @Test
+    public void testIsEmpty() throws Exception {
+        Assert.assertTrue(IOHelper.isEmpty(null));
+        Assert.assertTrue(IOHelper.isEmpty(""));
+        Assert.assertFalse(IOHelper.isEmpty("x"));
+    }
+
+    @Test
+    public void testGetLocalhost() throws Exception {
+        Assert.assertNotNull(IOHelper.getLocalHost());
     }
 
     // @Test

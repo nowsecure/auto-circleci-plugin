@@ -18,11 +18,13 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.attribute.BasicFileAttributes;
+import java.security.MessageDigest;
 import java.util.Optional;
 import java.util.Scanner;
 import java.util.function.BiPredicate;
 
 public class IOHelper implements IOHelperI {
+    private static final String CONTENT_DIGEST = "Content-Digest";
     private static final String CONTENT_LENGTH = "Content-Length";
     static String VERSION_TXT = "/version.txt";
     static String JVERSION_TXT = "/jversion.txt";
@@ -175,6 +177,7 @@ public class IOHelper implements IOHelperI {
         con.setRequestMethod(POST);
         initConnection(apiKey, con);
         con.setRequestProperty(CONTENT_LENGTH, String.valueOf(binary.length));
+        con.setRequestProperty(CONTENT_DIGEST, toDigest(binary, "SHA-1"));
         con.setDoOutput(true);
         OutputStream out = con.getOutputStream();
         out.write(binary);
@@ -194,5 +197,22 @@ public class IOHelper implements IOHelperI {
         con.setConnectTimeout(timeout);
         con.setReadTimeout(timeout);
         con.setInstanceFollowRedirects(false);
+    }
+
+    static String toDigest(byte[] b, String algorithm) {
+        try {
+            MessageDigest md = MessageDigest.getInstance(algorithm);
+            return algorithm + "=" + byteArrayToHexString(md.digest(b), b.length);
+        } catch (Exception e) {
+            return "B16=" + byteArrayToHexString(b, 16);
+        }
+    }
+
+    private static String byteArrayToHexString(byte[] b, int max) {
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < b.length && i < max; i++) {
+            sb.append(Integer.toString((b[i] & 0xff) + 0x100, 16).substring(1));
+        }
+        return sb.toString();
     }
 }
