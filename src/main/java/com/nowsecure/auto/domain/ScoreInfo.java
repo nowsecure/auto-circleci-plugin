@@ -39,6 +39,9 @@ public class ScoreInfo {
         scoreInfo.setCvssVersion((String) jsonObject.get("cvss_version"));
         scoreInfo.setIssues(jsonObject.get("issues"));
         scoreInfo.setAdjustedIssues(jsonObject.get("adjusted_issues"));
+        if (scoreInfo.score == 0) {
+            return null;
+        }
         return scoreInfo;
     }
 
