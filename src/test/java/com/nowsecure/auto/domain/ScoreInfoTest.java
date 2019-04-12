@@ -25,7 +25,7 @@ public class ScoreInfoTest {
         byte[] fileBytes = Files.readAllBytes(path);
         String json = new String(fileBytes);
         ScoreInfo score = ScoreInfo.fromJson(json);
-        Assert.assertEquals("v3", score.getCvssVersion());
+        Assert.assertNull(score);
     }
 
     @Test
