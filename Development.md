@@ -46,6 +46,9 @@ circleci orb validate .circleci/orb/orb.yml
 ### Github release
 Create new tag and release for the new version. Note: the orb.yml should reference new version 
 
+- Update .circleci/orb/orb.yml with new version
+- Tag and release new version in github
+
 ### Publish Dev config
 ```
 circleci orb publish .circleci/orb/orb.yml nowsecure/ci-auto-orb@dev:alpha
