@@ -174,7 +174,7 @@ public class IOHelper implements IOHelperI {
         con.setRequestMethod(POST);
         initConnection(apiKey, con);
         con.setRequestProperty(CONTENT_LENGTH, String.valueOf(binary.length));
-        con.setRequestProperty(CONTENT_DIGEST, toDigest(binary, "SHA-1"));
+        con.setRequestProperty(CONTENT_DIGEST, toDigest(binary, "SHA-256"));
         con.setDoOutput(true);
         OutputStream out = con.getOutputStream();
         out.write(binary);

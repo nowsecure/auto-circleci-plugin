@@ -39,20 +39,20 @@ public class IOHelperTest {
     public void testDigestFile() throws Exception {
         File tempFile = File.createTempFile("prefix-", "-suffix");
         tempFile.deleteOnExit();
-        String digest = IOHelper.toDigest(tempFile, "SHA1");
+        String digest = IOHelper.toDigest(tempFile, "SHA256");
         Assert.assertNotNull(digest);
     }
 
     @Test
     public void testDigestFileUnknown() throws Exception {
-        String digest = IOHelper.toDigest(new File("/tmp/unknown"), "SHA1");
+        String digest = IOHelper.toDigest(new File("/tmp/unknown"), "SHA256");
         Assert.assertNotNull(digest);
     }
 
     @Test
     public void testDigest() throws Exception {
-        String digest = IOHelper.toDigest("My bytes".getBytes(), "SHA1");
-        Assert.assertEquals("SHA1=6debb9bd4c98fb74", digest);
+        String digest = IOHelper.toDigest("My bytes".getBytes(), "SHA-256");
+        Assert.assertEquals("SHA-256=67a3742ea9fc0dad", digest);
     }
 
     @Test
