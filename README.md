@@ -21,7 +21,7 @@ You can use Auto CircleCI Orb as follows:
 ```
 version: 2.1
 orbs:
-  auto_ci: nowsecure/ci-auto-orb@1.0.7
+  auto_ci: nowsecure/ci-auto-orb@1.0.8
 jobs:
   build:
     docker:
