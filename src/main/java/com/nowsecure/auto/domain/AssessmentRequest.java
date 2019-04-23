@@ -104,7 +104,7 @@ public class AssessmentRequest extends MetadataRequest {
 
     @Override
     public String toString() {
-        return "UploadRequest [group=" + group + ", account=" + account + ", task=" + task + ", binary=" + getBinary()
+        return "AssessmentRequest [group=" + group + ", account=" + account + ", task=" + task + ", binary=" + getBinary()
                + ", creator=" + creator + ", created=" + created + ", application=" + getApplication() + ", version="
                + getVersion() + ", platform=" + getPlatform() + ", package=" + getPackageId() + "]";
     }
