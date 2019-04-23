@@ -38,6 +38,7 @@ public class NSAutoGateway {
     private static final String NOWSECURE_AUTO_SECURITY_TEST_PREFLIGHT_JSON = "/nowsecure-auto-security-test-preflight.json";
     private static final String NOWSECURE_AUTO_SECURITY_TEST_SCORE_JSON = "/nowsecure-auto-security-test-score.json";
     private static final String NOWSECURE_AUTO_SECURITY_TEST_REPORT_JSON = "/nowsecure-auto-security-test-report.json";
+    private static final String NOWSECURE_AUTO_SECURITY_TEST_BUILD_JSON = "/nowsecure-auto-security-test-build.json";
     //
     private final NSAutoParameters params;
     private final NSAutoLogger logger;
@@ -130,11 +131,42 @@ public class NSAutoGateway {
             if (json.contains("error")) {
                 throw new IOException("Preflight failed");
             }
-            return request;
+            return build(request);
         } catch (IOException e) {
             String msg = e.toString().contains("401 for URL") ? "" : " due to " + e.toString();
             throw new IOException("Failed to execute preflight for " + request.getBinary() + msg, e);
         }
+    }
+
+    UploadRequest build(UploadRequest request) throws IOException, ParseException {
+        if (request.getPackageId() == null || request.getPlatform() == null) {
+            File file = params.getFile();
+            String url = buildUrl(BINARY_URL_SUFFIX);
+            String json = helper.upload(url, params.getApiKey(), file);
+            request = UploadRequest.fromJson(json);
+        }
+        return request;
+
+        // String url = buildUrl("/build/" + request.getBinary());
+        // logger.info("executing build for digest " + request.getBinary() + "
+        // to " + url);
+        // try {
+        // String json = helper.get(url, params.getApiKey());
+        // File path = new File(params.getArtifactsDir().getCanonicalPath() +
+        // NOWSECURE_AUTO_SECURITY_TEST_BUILD_JSON);
+        // helper.save(path, json); //
+        // artifacts.add(path);
+        // logger.info("saved build results to " + path.getName(), Color.Green);
+        // if (json.contains("error")) {
+        // throw new IOException("Build results failed");
+        // }
+        // return request;
+        // } catch (IOException e) {
+        // String msg = e.toString().contains("401 for URL") ? "" : " due to " +
+        // e.toString();
+        // throw new IOException("Failed to execute build for " +
+        // request.getBinary() + msg, e);
+        // }
     }
 
     AssessmentRequest triggerAssessment(UploadRequest uploadRequest) throws IOException, ParseException {
