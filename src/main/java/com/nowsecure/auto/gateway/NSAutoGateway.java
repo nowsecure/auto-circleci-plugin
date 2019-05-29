@@ -52,7 +52,7 @@ public class NSAutoGateway {
         this.logger = logger;
         this.helper = helper;
         //
-        // logEnv("Master");
+        logEnv("Master");
         // validate("Master");
         if (params.getProxySettings() != null) {
             params.getProxySettings().validate("Master");
@@ -316,24 +316,25 @@ public class NSAutoGateway {
 
     private void logEnv(String prefix) throws UnknownHostException {
         logger.info(prefix + " Local Hostname: " + InetAddress.getLocalHost() + ", debug " + params.isDebug());
-        // logMap(prefix + " Environment variables:\n", System.getenv(),
-        // Color.Blue);
-        logMap(prefix + " System properties:\n", System.getProperties());
+        if (params.isDebug()) {
+            logMap(prefix + " Environment variables:\n", System.getenv());
+            logMap(prefix + " System properties:\n", System.getProperties());
+        }
     }
 
     private void logMap(String prefix, Map<?, ?> map) {
         StringBuilder sb = new StringBuilder();
         for (Map.Entry<?, ?> e : map.entrySet()) {
             String key = e.getKey().toString().toLowerCase();
-            if (!key.contains("password") && key.matches(".*(http|proxy).*")) {
+            //if (!key.contains("password") && key.matches(".*(http|proxy).*")) {
                 String val = e.getValue().toString();
                 if (val.length() > 80) {
                     val = val.substring(0, 80);
                 }
                 sb.append("\t" + e.getKey() + " = " + val + "\r\n");
-            }
+            //}
         }
-        logger.info(prefix + sb + "\n");
+        logger.info(prefix + sb + "\n\n");
     }
 
     @Override
