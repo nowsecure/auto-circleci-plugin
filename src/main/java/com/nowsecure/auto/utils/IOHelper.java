@@ -177,15 +177,14 @@ public class IOHelper implements IOHelperI {
         con.setRequestProperty(CONTENT_DIGEST, toDigest(binary, "SHA-256"));
         con.setDoOutput(true);
         con.connect();
-        // Check http code first
-        int code = con.getResponseCode();
-        if (code < 200 || code >= 300) {
-            throw new IOException("Failed to connect to " + uri + " to upload " + file + " due to HTTP status " + code + ", message " + con.getResponseMessage() + " -- " + con.getContent());
-        }
         OutputStream out = con.getOutputStream();
         out.write(binary);
         out.flush();
         out.close();
+        //int code = con.getResponseCode();
+        //if (code < 200 || code >= 300) {
+        //    throw new IOException("Failed to connect to " + uri + " to upload " + file + " due to HTTP status " + code + ", message " + con.getResponseMessage() + " -- " + con.getContent());
+        //}
         InputStream in = con.getInputStream();
         String json = new String(load(in), StandardCharsets.UTF_8);
         in.close();
