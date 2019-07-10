@@ -18,6 +18,7 @@ public class ScoreInfo {
     private String findingsDigest;
     private String findingsVersion;
     private String cvssVersion;
+    private String status;
 
     public ScoreInfo() {
 
@@ -34,15 +35,19 @@ public class ScoreInfo {
         if (jsonObject.get("base_score") != null) {
             scoreInfo.setBaseScore(((Number) jsonObject.get("base_score")).longValue());
         }
+        scoreInfo.setStatus((String) jsonObject.get("status"));
         scoreInfo.setFindingsDigest((String) jsonObject.get("findings_digest"));
         scoreInfo.setFindingsVersion((String) jsonObject.get("findings_version"));
         scoreInfo.setCvssVersion((String) jsonObject.get("cvss_version"));
         scoreInfo.setIssues(jsonObject.get("issues"));
         scoreInfo.setAdjustedIssues(jsonObject.get("adjusted_issues"));
-        if (scoreInfo.score == 0) {
+        if ("failed".equals(scoreInfo.status) || "completed".equals(scoreInfo.status)) {
+            return scoreInfo;
+        } else if (scoreInfo.score == 0) {
             return null;
+        } else {
+            return scoreInfo;
         }
-        return scoreInfo;
     }
 
     public double getScore() {
@@ -99,6 +104,14 @@ public class ScoreInfo {
 
     public void setCvssVersion(String cvssVersion) {
         this.cvssVersion = cvssVersion;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public String getStatus() {
+        return this.status;
     }
 
 }
