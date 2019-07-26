@@ -1,8 +1,10 @@
 package com.nowsecure.auto.utils;
 
+import java.io.BufferedInputStream;
 import java.io.BufferedWriter;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -52,10 +54,6 @@ public class IOHelper implements IOHelperI {
         } catch (Exception e) {
             return "127.0.0.1";
         }
-    }
-
-    public byte[] load(File file) throws IOException {
-        return _load(file);
     }
 
     public static String getVersion() {
@@ -168,23 +166,40 @@ public class IOHelper implements IOHelperI {
      */
     @Override
     public String upload(String uri, String apiKey, File file) throws IOException {
-        byte[] binary = load(file);
+        if (!file.exists()) {
+            throw new FileNotFoundException("Could not find file " + file);
+        }
         URL url = new URL(uri);
         HttpURLConnection con = (HttpURLConnection) url.openConnection();
         con.setRequestMethod(POST);
+        con.setFixedLengthStreamingMode(file.length());
         initConnection(apiKey, con);
-        con.setRequestProperty(CONTENT_LENGTH, String.valueOf(binary.length));
-        con.setRequestProperty(CONTENT_DIGEST, toDigest(binary, "SHA-256"));
+        con.setRequestProperty(CONTENT_LENGTH, String.valueOf(file.length()));
+        con.setRequestProperty(CONTENT_DIGEST, toDigest(file, "SHA-256"));
         con.setDoOutput(true);
         con.connect();
         OutputStream out = con.getOutputStream();
-        out.write(binary);
+
+        InputStream fis = new BufferedInputStream(new FileInputStream(file));
+        byte[] buffer = new byte[1024];
+        int numRead;
+        do {
+            numRead = fis.read(buffer);
+            if (numRead > 0) {
+                out.write(buffer, 0, numRead);
+            }
+        } while (numRead != -1);
+
         out.flush();
         out.close();
-        //int code = con.getResponseCode();
-        //if (code < 200 || code >= 300) {
-        //    throw new IOException("Failed to connect to " + uri + " to upload " + file + " due to HTTP status " + code + ", message " + con.getResponseMessage() + " -- " + con.getContent());
-        //}
+        fis.close();
+        //
+        // int code = con.getResponseCode();
+        // if (code < 200 || code >= 300) {
+        // throw new IOException("Failed to connect to " + uri + " to upload " +
+        // file + " due to HTTP status " + code + ", message " +
+        // con.getResponseMessage() + " -- " + con.getContent());
+        // }
         InputStream in = con.getInputStream();
         String json = new String(load(in), StandardCharsets.UTF_8);
         in.close();
@@ -203,27 +218,35 @@ public class IOHelper implements IOHelperI {
 
     public static String toDigest(File file, String algorithm) {
         try {
-            return toDigest(_load(file), algorithm);
-        } catch (Exception e) {
-            return e.getMessage();
-        }
-    }
-
-    public static String toDigest(byte[] b, String algorithm) {
-        try {
+            InputStream fis = new BufferedInputStream(new FileInputStream(file));
+            byte[] buffer = new byte[1024];
             MessageDigest md = MessageDigest.getInstance(algorithm);
-            return algorithm + "=" + byteArrayToHexString(md.digest(b), b.length);
+            int numRead;
+
+            do {
+                numRead = fis.read(buffer);
+                if (numRead > 0) {
+                    md.update(buffer, 0, numRead);
+                }
+            } while (numRead != -1);
+            fis.close();
+            String result = byteArrayToHexString(md.digest());
+            return algorithm + "=" + result;
         } catch (Exception e) {
-            return "B16=" + byteArrayToHexString(b, 16);
+            return "NO-DIGEST";
         }
     }
 
-    private static String byteArrayToHexString(byte[] b, int max) {
+    private static String byteArrayToHexString(byte[] b) {
         StringBuilder sb = new StringBuilder();
-        for (int i = 0; i < b.length && i < max; i++) {
+        for (int i = 0; i < b.length; i++) {
             sb.append(Integer.toString((b[i] & 0xff) + 0x100, 16).substring(1));
         }
         return sb.toString();
+    }
+
+    public byte[] load(File file) throws IOException {
+        return _load(file);
     }
 
     private static byte[] _load(File file) throws IOException {

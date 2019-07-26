@@ -2,6 +2,7 @@ package com.nowsecure.auto.utils;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileWriter;
 import java.io.IOException;
 
 import org.junit.Assert;
@@ -46,19 +47,40 @@ public class IOHelperTest {
     @Test
     public void testDigestFileUnknown() throws Exception {
         String digest = IOHelper.toDigest(new File("/tmp/unknown"), "SHA256");
-        Assert.assertNotNull(digest);
+        Assert.assertEquals("NO-DIGEST", digest);
     }
 
     @Test
     public void testDigest() throws Exception {
-        String digest = IOHelper.toDigest("My bytes".getBytes(), "SHA-256");
-        Assert.assertEquals("SHA-256=67a3742ea9fc0dad", digest);
+        File file = File.createTempFile("test", "test");
+        file.deleteOnExit();
+        FileWriter out = new FileWriter(file);
+        out.write("My bytes");
+        out.close();
+        String digest = IOHelper.toDigest(file, "SHA-256");
+        Assert.assertEquals("SHA-256=67a3742ea9fc0dad80b8a78d311592ab14cb0c4f14bf820faf40a208c9f164f6", digest);
+    }
+
+    @Test
+    public void testDigestRandom() throws Exception {
+        File file = File.createTempFile("test", "test");
+        file.deleteOnExit();
+        FileWriter out = new FileWriter(file);
+        out.write("This is test\nfile with random\ndata.\n");
+        out.close();
+        String digest = IOHelper.toDigest(file, "SHA-256");
+        Assert.assertEquals("SHA-256=60fa63fbf0029122912c8eb73a3151915ee4ab323318b47229ed484d31042494", digest);
     }
 
     @Test
     public void testDigestBad() throws Exception {
-        String digest = IOHelper.toDigest("My bytes".getBytes(), "Bad");
-        Assert.assertEquals("B16=4d79206279746573", digest);
+        File file = File.createTempFile("test", "test");
+        file.deleteOnExit();
+        FileWriter out = new FileWriter(file);
+        out.write("My bytes");
+        out.close();
+        String digest = IOHelper.toDigest(file, "Bad");
+        Assert.assertEquals("NO-DIGEST", digest);
     }
 
     @Test
