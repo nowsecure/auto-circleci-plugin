@@ -27,6 +27,15 @@ tasks.withType(JavaExec) {
     systemProperties System.properties
 }
 
+jar {
+  manifest {
+    attributes(
+      'Class-Path': configurations.compile.collect { it.getName() }.join(' '),
+      'Main-Class': mainClassName
+    )
+  }
+}
+
 task copyJar(type: Copy) {
     from fileTree("${buildDir}/libs/").files
     into file("dist")
