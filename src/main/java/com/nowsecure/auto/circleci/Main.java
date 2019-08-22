@@ -216,11 +216,12 @@ public class Main implements NSAutoParameters, NSAutoLogger {
 
     @Override
     public String toString() {
-        return "Main [apiUrl=" + apiUrl + ", group=" + group + ", file=" + file + ", waitMinutes=" + waitMinutes
-               + ", breakBuildOnScore=" + breakBuildOnScore + ", scoreThreshold=" + scoreThreshold + ", artifactsDir="
-               + artifactsDir + ", username=" + username + ", showStatusMessages=" + showStatusMessages
-               + ", stopTestsForStatusMessage=" + stopTestsForStatusMessage + ", proxyEnabled=" + proxyEnabled
-               + ", proxySettings=" + proxySettings + "]";
+        return "Args [apiUrl=" + apiUrl + ", group=" + group + ", file=" + file + ", waitMinutes=" + waitMinutes
+               + ", breakBuildOnScore=" + breakBuildOnScore + ", scoreThreshold=" + scoreThreshold + ", apiKey="
+               + apiKey + ", artifactsDir=" + artifactsDir + ", description=" + description + ", username=" + username
+               + ", password=" + password + ", showStatusMessages=" + showStatusMessages
+               + ", stopTestsForStatusMessage=" + stopTestsForStatusMessage + ", debug=" + debug + ", proxyEnabled="
+               + proxyEnabled + ", proxySettings=" + proxySettings + "]";
     }
 
     private static int parseInt(String name) {
@@ -255,6 +256,7 @@ public class Main implements NSAutoParameters, NSAutoLogger {
     public static void main(String[] args) {
         Main main = new Main();
         main.parseArgs(args);
+        System.out.println(main);
 
         try {
             main.execute();
