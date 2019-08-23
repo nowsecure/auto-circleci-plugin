@@ -22,7 +22,7 @@ import com.nowsecure.auto.utils.IOHelperI;
  */
 public class Main implements NSAutoParameters, NSAutoLogger {
     private static final int TIMEOUT = 60000;
-    private static final String PLUGIN_NAME = "circleci-nowsecure-auto-security-test";
+    private static String PLUGIN_NAME = "circleci-nowsecure-auto-security-test";
     private static final String DEFAULT_URL = "https://lab-api.nowsecure.com";
     private String apiUrl = DEFAULT_URL;
     private String group;
@@ -215,6 +215,35 @@ public class Main implements NSAutoParameters, NSAutoLogger {
     }
 
     @Override
+    public void info(String msg) {
+        info(msg, null);
+    }
+
+    @Override
+    public void info(String msg, Color color) {
+        if (color == null) {
+            color = Color.Black;
+        }
+        System.out.println(color.format("INFO " + new Date() + "@" + IOHelper.getLocalHost() + ":" + PLUGIN_NAME + " v"
+                                        + IOHelper.getVersion() + " " + msg));
+    }
+
+    @Override
+    public void error(String msg) {
+        System.err.println(Color.Red.format("ERROR " + new Date() + "@" + IOHelper.getLocalHost() + ":" + PLUGIN_NAME
+                                            + " v" + IOHelper.getVersion() + " " + msg));
+    }
+
+    @Override
+    public void debug(String msg) {
+        if (debug) {
+            System.out.println(Color.Black.format("DEBUG " + new Date() + "@" + IOHelper.getLocalHost() + ":"
+                                                  + PLUGIN_NAME + " v" + IOHelper.getVersion() + " " + msg));
+        }
+
+    }
+
+    @Override
     public String toString() {
         return "Args [apiUrl=" + apiUrl + ", group=" + group + ", file=" + file + ", waitMinutes=" + waitMinutes
                + ", breakBuildOnScore=" + breakBuildOnScore + ", scoreThreshold=" + scoreThreshold + ", apiKey="
@@ -224,6 +253,9 @@ public class Main implements NSAutoParameters, NSAutoLogger {
                + proxyEnabled + ", proxySettings=" + proxySettings + "]";
     }
 
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    // PRIVATE METHODS
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     private static int parseInt(String name) {
         String value = System.getProperty(name, "").trim();
         if (value.length() == 0) {
@@ -278,13 +310,15 @@ public class Main implements NSAutoParameters, NSAutoLogger {
         System.err
                 .println(
                         "\tgradle run --args=\"--auto-url auto-url --auto-dir artifacts-dir --auto-token api-token --auto-group user-group"
-                         + " --auto-username test-username --auto-password test-password --auto-show-status-messages true|false to show status-messages --auto-stop-tests-on-status status-message to stop tests"
-                         + " --auto-file binary-file --auto-wait wait-for-completion-in-minutes --auto-score min-score-to-pass \"");
+                         + " --auto-username test-username --auto-password test-password --auto-show-status-messages true|false to show status-messages"
+                         + " --auto-stop-tests-on-status status-message to stop tests"
+                         + " --auto-file binary-file --auto-wait wait-for-completion-in-minutes --auto-score min-score-to-pass --plugin-name --plugin-version\"");
         System.err.println("\tOR");
         System.err
                 .println(
                         "Usage: gradle run -Dauto.dir=artifacts-dir -Dauto.url=auto-url -Dauto.token=api-token -Dauto.file=mobile-binary-file"
-                         + " -Dauto.username test-username -Dauto.password test-password -Dauto.show.status.messages true|false show status-messages -Dauto.stop.tests.on.status status-message to stop tests"
+                         + " -Dauto.username test-username -Dauto.password test-password -Dauto.show.status.messages true|false show status-messages"
+                         + " -Dauto.stop.tests.on.status status-message to stop tests"
                          + " -Dauto.group=user-group -Dauto.file=binary-file -Dauto.wait=wait-for-completion-in-minutes -Dauto.score=min-score-to-pass");
         System.err.println("\tDefault url is " + DEFAULT_URL);
         System.err.println("\tDefault auto-wait is 0, which means just upload without waiting for results");
@@ -314,6 +348,10 @@ public class Main implements NSAutoParameters, NSAutoLogger {
                 this.waitMinutes = Integer.parseInt(args[i + 1].trim());
             } else if ("--auto-score".equals(args[i])) {
                 this.scoreThreshold = Integer.parseInt(args[i + 1].trim());
+            } else if ("--plugin-name".equals(args[i])) {
+                PLUGIN_NAME = args[i + 1].trim();
+            } else if ("--plugin-version".equals(args[i])) {
+                IOHelper.VERSION = args[i + 1].trim();
             } else if ("--auto-username".equals(args[i])) {
                 this.username = args[i + 1].trim();
             } else if ("--auto-password".equals(args[i])) {
@@ -376,34 +414,4 @@ public class Main implements NSAutoParameters, NSAutoLogger {
             this.stopTestsForStatusMessage = getString("auto.stop.tests.on.status", "");
         }
     }
-
-    @Override
-    public void info(String msg) {
-        info(msg, null);
-    }
-
-    @Override
-    public void info(String msg, Color color) {
-        if (color == null) {
-            color = Color.Black;
-        }
-        System.out.println(color.format("INFO " + new Date() + "@" + IOHelper.getLocalHost() + ":" + PLUGIN_NAME + " v"
-                                        + IOHelper.getVersion() + " " + msg));
-    }
-
-    @Override
-    public void error(String msg) {
-        System.err.println(Color.Red.format("ERROR " + new Date() + "@" + IOHelper.getLocalHost() + ":" + PLUGIN_NAME
-                                            + " v" + IOHelper.getVersion() + " " + msg));
-    }
-
-    @Override
-    public void debug(String msg) {
-        if (debug) {
-            System.out.println(Color.Black.format("DEBUG " + new Date() + "@" + IOHelper.getLocalHost() + ":"
-                                                  + PLUGIN_NAME + " v" + IOHelper.getVersion() + " " + msg));
-        }
-
-    }
-
 }
