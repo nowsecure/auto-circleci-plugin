@@ -6,6 +6,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 
 public class IOHelperTest {
@@ -14,6 +15,11 @@ public class IOHelperTest {
     private static final File file = new File("apkpure_app_887.apk");
     private IOHelper helper = new IOHelper("test", 60000);
 
+    @Before
+    public void setup() {
+        IOHelper.VERSION = "";
+    }
+    
     @Test
     public void testLoad() throws Exception {
         byte[] data = helper.load(new File("src/test/resources/score.json"));
