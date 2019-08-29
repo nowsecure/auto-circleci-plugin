@@ -360,6 +360,8 @@ public class Main implements NSAutoParameters, NSAutoLogger {
                 this.showStatusMessages = Boolean.valueOf(args[i + 1].trim());
             } else if ("--auto-stop-tests-on-status".equals(args[i])) {
                 this.stopTestsForStatusMessage = args[i + 1].trim();
+            } else if ("--debug".equals(args[i])) {
+                this.debug = true;
             }
         }
         if (isEmpty(this.group)) {
