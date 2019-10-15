@@ -45,7 +45,7 @@ circleci orb validate .circleci/orb/orb.yml
 
 ### Github release
 Create new tag and release for the new version. Note: the orb.yml should reference new version 
-- Search all files for 1.0.9 (or latest version)
+- Search all files for 1.1.0 (or latest version)
 - Update .circleci/orb/orb.yml with new version
 - Tag and release new version in github
 

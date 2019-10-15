@@ -384,7 +384,7 @@ public class Main implements NSAutoParameters, NSAutoLogger {
             this.file = new File(val);
         }
         if (!file.exists()) {
-            this.usage("auto-file doesn't exist, please specify full path");
+            this.usage("auto-file doesn't exist, please specify full path " + file.getAbsolutePath());
         }
 
         if (artifactsDir == null) {
