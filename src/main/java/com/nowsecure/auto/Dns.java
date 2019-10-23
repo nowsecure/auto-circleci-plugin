@@ -12,7 +12,9 @@ public class Dns {
             urlStr = args[0];
         }
         System.out.println("Cheking URL " + urlStr);
+        System.out.println("System config " + System.getProperties());
         URL url = new URL(urlStr);
         InetAddress.getByName(url.getHost());
+        System.out.println("succeeded in checking DNS for host " + url.getHost());
     }
 }
