@@ -3,7 +3,7 @@ package com.nowsecure.auto;
 import java.net.InetAddress;
 import java.net.URL;
 
-public class Dns {
+public class DnsUrlCheck {
     private static final String DEFAULT_URL = "https://lab-api.nowsecure.com";
 
     public static void main(String[] args) throws Exception {

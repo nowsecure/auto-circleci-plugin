@@ -39,6 +39,7 @@ public class Main implements NSAutoParameters, NSAutoLogger {
     private String stopTestsForStatusMessage;
     private boolean debug;
     private boolean proxyEnabled;
+    private Boolean validateDnsUrlConnection;
     //
     private ProxySettings proxySettings = new ProxySettings();
 
@@ -244,6 +245,11 @@ public class Main implements NSAutoParameters, NSAutoLogger {
     }
 
     @Override
+    public boolean validateDnsUrlConnection() {
+        return validateDnsUrlConnection;
+    }
+
+    @Override
     public String toString() {
         return "Args [apiUrl=" + apiUrl + ", group=" + group + ", file=" + file + ", waitMinutes=" + waitMinutes
                + ", breakBuildOnScore=" + breakBuildOnScore + ", scoreThreshold=" + scoreThreshold + ", apiKey="
@@ -270,6 +276,11 @@ public class Main implements NSAutoParameters, NSAutoLogger {
             return 0;
         }
         return Integer.parseInt(value);
+    }
+
+    private static boolean getBool(String name, boolean def) {
+        String val = getString(name, String.valueOf(def));
+        return Boolean.valueOf(val);
     }
 
     private static String getString(String name, String def) {
@@ -362,6 +373,8 @@ public class Main implements NSAutoParameters, NSAutoLogger {
                 this.stopTestsForStatusMessage = args[i + 1].trim();
             } else if ("--debug".equals(args[i])) {
                 this.debug = true;
+            } else if ("--skipDnsUrlConnectionValidation".equals(args[i])) {
+                validateDnsUrlConnection = false;
             }
         }
         if (isEmpty(this.group)) {
@@ -415,5 +428,9 @@ public class Main implements NSAutoParameters, NSAutoLogger {
         if (isEmpty(this.stopTestsForStatusMessage)) {
             this.stopTestsForStatusMessage = getString("auto.stop.tests.on.status", "");
         }
+        if (this.validateDnsUrlConnection == null) {
+            this.validateDnsUrlConnection = !getBool("auto.skipDnsUrlConnectionValidation", false);
+        }
     }
+
 }

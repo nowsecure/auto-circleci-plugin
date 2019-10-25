@@ -380,4 +380,9 @@ public class NSAutoGatewayTest implements NSAutoParameters, NSAutoLogger, IOHelp
         return false;
     }
 
+    @Override
+    public boolean validateDnsUrlConnection() {
+        return true;
+    }
+
 }

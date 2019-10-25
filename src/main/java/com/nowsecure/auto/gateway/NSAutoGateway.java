@@ -79,7 +79,12 @@ public class NSAutoGateway {
         try {
             if (!master) {
                 logEnv("Slave");
-                validate("Slave");
+                if (params.validateDnsUrlConnection()) {
+                    validate("Slave");
+                } else {
+                    logger.info("[master: " + master
+                                + "] Skipping validation for DNS and HTTPS Connection with the NowSecure API.");
+                }
                 params.getProxySettings().validate("Slave");
             }
             //
@@ -113,7 +118,8 @@ public class NSAutoGateway {
         helper.save(path, json); //
         artifacts.add(path);
         UploadRequest request = UploadRequest.fromJson(json);
-        logger.info("uploaded binary with digest " + request.getBinary() + " and saved output to " + path.getAbsolutePath(),
+        logger.info(
+                "uploaded binary with digest " + request.getBinary() + " and saved output to " + path.getAbsolutePath(),
                 Color.Green);
         return request;
     }
@@ -156,7 +162,8 @@ public class NSAutoGateway {
         // NOWSECURE_AUTO_SECURITY_TEST_BUILD_JSON);
         // helper.save(path, json); //
         // artifacts.add(path);
-        // logger.info("saved build results to " + path.getAbsolutePath(), Color.Green);
+        // logger.info("saved build results to " + path.getAbsolutePath(),
+        // Color.Green);
         // if (json.contains("error")) {
         // throw new IOException("Build results failed");
         // }
@@ -291,6 +298,8 @@ public class NSAutoGateway {
     }
 
     void validate(String prefix) throws IOException {
+        logger.info("Validating DNS and HTTPS Connection with the NowSecure API: " + params.getApiUrl());
+
         URL url = null;
         try {
             url = new URL(params.getApiUrl());
@@ -328,13 +337,14 @@ public class NSAutoGateway {
         StringBuilder sb = new StringBuilder();
         for (Map.Entry<?, ?> e : map.entrySet()) {
             String key = e.getKey().toString().toLowerCase();
-            //if (!key.contains("password") && key.matches(".*(http|proxy).*")) {
-                String val = e.getValue().toString();
-                if (val.length() > 80) {
-                    val = val.substring(0, 80);
-                }
-                sb.append("\t" + e.getKey() + " = " + val + "\r\n");
-            //}
+            // if (!key.contains("password") && key.matches(".*(http|proxy).*"))
+            // {
+            String val = e.getValue().toString();
+            if (val.length() > 80) {
+                val = val.substring(0, 80);
+            }
+            sb.append("\t" + e.getKey() + " = " + val + "\r\n");
+            // }
         }
         logger.info(prefix + sb + "\n\n");
     }
