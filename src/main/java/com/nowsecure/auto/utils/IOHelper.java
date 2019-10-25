@@ -30,6 +30,7 @@ public class IOHelper implements IOHelperI {
     private static final String CONTENT_LENGTH = "Content-Length";
     public static String VERSION = "";
     static String VERSION_TXT = "/version.txt";
+    static String JVERSION_TXT = "/jversion.txt";
     private static final String USER_AGENT = "User-Agent";
     private static final String GET = "GET";
     private static final String CONTENT_TYPE = "Content-Type";
@@ -61,7 +62,10 @@ public class IOHelper implements IOHelperI {
             return VERSION;
         }
         try {
-            InputStream in = IOHelper.class.getResourceAsStream(VERSION_TXT);
+            InputStream in = IOHelper.class.getResourceAsStream(JVERSION_TXT);
+            if (in == null) {
+                in = IOHelper.class.getResourceAsStream(VERSION_TXT);
+            }
             Scanner scanner = new Scanner(in, "UTF-8");
             String version = scanner.next();
             scanner.close();
