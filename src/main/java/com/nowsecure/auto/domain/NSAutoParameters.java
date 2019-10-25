@@ -31,7 +31,7 @@ public interface NSAutoParameters {
 
     boolean isProxyEnabled();
 
-    boolean validateDnsUrlConnection();
+    boolean isValidateDnsUrlConnectionEnabled();
 
     ProxySettings getProxySettings();
 }

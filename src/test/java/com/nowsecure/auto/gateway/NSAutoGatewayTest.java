@@ -381,7 +381,7 @@ public class NSAutoGatewayTest implements NSAutoParameters, NSAutoLogger, IOHelp
     }
 
     @Override
-    public boolean validateDnsUrlConnection() {
+    public boolean isValidateDnsUrlConnectionEnabled() {
         return true;
     }
 

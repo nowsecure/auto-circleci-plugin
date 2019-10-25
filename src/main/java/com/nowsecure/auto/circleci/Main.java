@@ -245,7 +245,7 @@ public class Main implements NSAutoParameters, NSAutoLogger {
     }
 
     @Override
-    public boolean validateDnsUrlConnection() {
+    public boolean isValidateDnsUrlConnectionEnabled() {
         return validateDnsUrlConnection;
     }
 

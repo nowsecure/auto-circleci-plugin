@@ -79,7 +79,7 @@ public class NSAutoGateway {
         try {
             if (!master) {
                 logEnv("Slave");
-                if (params.validateDnsUrlConnection()) {
+                if (params.isValidateDnsUrlConnectionEnabled()) {
                     validate("Slave");
                 } else {
                     logger.info("[master: " + master
