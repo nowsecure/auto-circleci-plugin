@@ -129,11 +129,17 @@ public class NSAutoGateway {
         logger.info("executing preflight for digest " + request.getBinary() + " to " + url);
         try {
             String json = helper.get(url, params.getApiKey());
+            if (params.isDebug() || json.contains("error") || IOHelper.isEmpty(request.getPackageId())
+                || IOHelper.isEmpty(request.getPlatform())) {
+
+                logger.info("Prefight Results: " + json, Color.Cyan);
+            }
             File path = new File(
                     params.getArtifactsDir().getCanonicalPath() + NOWSECURE_AUTO_SECURITY_TEST_PREFLIGHT_JSON);
             helper.save(path, json); //
             artifacts.add(path);
             logger.info("saved preflight results to " + path.getAbsolutePath(), Color.Green);
+
             if (json.contains("error")) {
                 throw new IOException("Preflight failed");
             }
@@ -145,10 +151,11 @@ public class NSAutoGateway {
     }
 
     UploadRequest build(UploadRequest request) throws IOException, ParseException {
-        if (request.getPackageId() == null || request.getPlatform() == null) {
+        if (IOHelper.isEmpty(request.getPackageId()) || IOHelper.isEmpty(request.getPlatform())) {
             File file = params.getFile();
             String url = buildUrl(BINARY_URL_SUFFIX);
             String json = helper.upload(url, params.getApiKey(), file);
+
             request = UploadRequest.fromJson(json);
         }
         return request;

@@ -45,7 +45,14 @@ public class IOHelper implements IOHelperI {
     }
 
     public static boolean isEmpty(String s) {
-        return s == null || s.trim().isEmpty();
+        if (s == null) {
+            return true;
+        }
+        s = s.trim();
+        if (s.isEmpty() || "null".equalsIgnoreCase(s)) {
+            return true;
+        }
+        return false;
     }
 
     public static String getLocalHost() {
