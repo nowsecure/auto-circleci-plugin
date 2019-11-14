@@ -348,7 +348,7 @@ public class Main implements NSAutoParameters, NSAutoLogger {
             if ("--auto-url".equals(args[i])) {
                 this.apiUrl = args[i + 1].trim();
             } else if ("--auto-group".equals(args[i])) {
-                this.apiUrl = args[i + 1].trim();
+                this.group = args[i + 1].trim();
             } else if ("--auto-dir".equals(args[i])) {
                 this.artifactsDir = new File(args[i + 1].trim());
             } else if ("--auto-file".equals(args[i])) {

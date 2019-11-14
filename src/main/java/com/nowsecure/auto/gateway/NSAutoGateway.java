@@ -118,6 +118,12 @@ public class NSAutoGateway {
         helper.save(path, json); //
         artifacts.add(path);
         UploadRequest request = UploadRequest.fromJson(json);
+        //
+        if (params.isDebug() || json.contains("error") || IOHelper.isEmpty(request.getPackageId())
+            || IOHelper.isEmpty(request.getPlatform())) {
+            logger.info("Debug Upload Results: " + json, Color.Cyan);
+        }
+
         logger.info(
                 "uploaded binary with digest " + request.getBinary() + " and saved output to " + path.getAbsolutePath(),
                 Color.Green);
@@ -157,6 +163,10 @@ public class NSAutoGateway {
             String json = helper.upload(url, params.getApiKey(), file);
 
             request = UploadRequest.fromJson(json);
+            if (params.isDebug() || json.contains("error") || IOHelper.isEmpty(request.getPackageId())
+                || IOHelper.isEmpty(request.getPlatform())) {
+                logger.info("Debug Retried Upload Results: " + json, Color.Cyan);
+            }
         }
         return request;
 

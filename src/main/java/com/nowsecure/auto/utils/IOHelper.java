@@ -175,6 +175,10 @@ public class IOHelper implements IOHelperI {
      * 
      * @see com.nowsecure.auto.utils.IOHelperI#upload(java.lang.String,
      * java.lang.String, java.lang.String)
+     * 
+     * curl -v -x 127.0.0.1:3128 -X POST
+     * https://lab-api.nowsecure.com/binary?group=xxxx -H
+     * "Authorization: Bearer $TOKEN" --data-binary "@xxx.apk"
      */
     @Override
     public String upload(String uri, String apiKey, File file) throws IOException {
