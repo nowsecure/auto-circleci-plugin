@@ -45,9 +45,13 @@ circleci orb validate .circleci/orb/orb.yml
 
 ### Github release
 Create new tag and release for the new version. Note: the orb.yml should reference new version 
-- Search all files for 1.1.0 (or latest version)
+- edit src/main/resources/version.txt
+- ./gradlew fatJar
+- cp build/libs/all-in-one-jar-1.xx.jar dist
+- Search all files for 1.xx (or latest version)
 - Update .circleci/orb/orb.yml with new version
 - Tag and release new version in github
+
 
 ### Publish Dev config
 ```

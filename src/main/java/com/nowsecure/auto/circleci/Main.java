@@ -24,7 +24,7 @@ public class Main implements NSAutoParameters, NSAutoLogger {
     private static final int TIMEOUT = 60000;
     private static String PLUGIN_NAME = "circleci-nowsecure-auto-security-test";
     private static final String DEFAULT_URL = "https://lab-api.nowsecure.com";
-    private String apiUrl = DEFAULT_URL;
+    private String apiUrl;
     private String group;
     private File file;
     private int waitMinutes;
