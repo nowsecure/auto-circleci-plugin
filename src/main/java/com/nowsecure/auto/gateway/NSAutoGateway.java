@@ -196,6 +196,8 @@ public class NSAutoGateway {
     AssessmentRequest triggerAssessment(UploadRequest uploadRequest) throws IOException, ParseException {
         String url = buildUrl(
                 "/app/" + uploadRequest.getPlatform() + "/" + uploadRequest.getPackageId() + "/assessment/");
+        logger.info("triggering security test for digest " + uploadRequest.getBinary() + " to " + url);
+        
         String json = helper.post(url, params.getApiKey());
         File path = new File(
                 params.getArtifactsDir().getCanonicalPath() + NOWSECURE_AUTO_SECURITY_TEST_REPORT_REQUEST_JSON);

@@ -36,7 +36,8 @@ WORKDIR /home/gradle/auto-circleci-plugin-${plugin_version}
 #
 # Execute gradle task
 
-ENTRYPOINT gradle run -Dauto.url=$auto_url -Dauto.token=$auto_token -Dauto.dir=$artifacts_dir -Dauto.file=$binary_file -Dauto.group=$auto_group -Dauto.wait=$max_wait -Dauto.score=$min_score -Dauto.show.status.messages=$show_status_messages
+ENTRYPOINT java -jar dist/all-in-one-jar-1.1.2.jar --plugin-name circleci-nowsecure-auto-security-test --plugin-version 1.1.2 --auto-url $auto_url --auto-token $auto_token --auto-dir $artifacts_dir --auto-file $binary_file --auto-group $auto_group --auto-wait $max_wait --auto-score $min_score --auto-show-status-messages $show_status_messages --debug
+
 
 ## EXAMPLE FOR EXECUTING DOCKER IMAGE
 # docker run -v ~/Desktop/apk:/source -v /tmp:/artifacts -e "auto_token=$TOKEN" -e "auto_group=$GROUP" -e "binary_file=/source/golf.apk" -e "artifacts_dir=/artifacts" -e "max_wait=30" -e "min_score=50" -it --rm $IMAGE_ID

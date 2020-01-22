@@ -1,7 +1,9 @@
 package com.nowsecure.auto.circleci;
 
 import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.Date;
 
 import com.nowsecure.auto.domain.Color;
@@ -40,6 +42,7 @@ public class Main implements NSAutoParameters, NSAutoLogger {
     private boolean debug;
     private boolean proxyEnabled;
     private Boolean validateDnsUrlConnection;
+    private PrintWriter console;
     //
     private ProxySettings proxySettings = new ProxySettings();
 
@@ -66,6 +69,16 @@ public class Main implements NSAutoParameters, NSAutoLogger {
 
     public void setArtifactsDir(File artifactsDir) {
         this.artifactsDir = artifactsDir;
+        buildConsole();
+    }
+
+    private void buildConsole() {
+        try {
+            if (console == null) {
+                console = new PrintWriter(new FileWriter(new File(artifactsDir, "console.log")));
+            }
+        } catch (IOException e) {
+        }
     }
 
     /*
@@ -227,12 +240,29 @@ public class Main implements NSAutoParameters, NSAutoLogger {
         }
         System.out.println(color.format("INFO " + new Date() + "@" + IOHelper.getLocalHost() + ":" + PLUGIN_NAME + " v"
                                         + IOHelper.getVersion() + " " + msg));
+        System.out.flush();
+        try {
+            buildConsole();
+            console.println("INFO " + new Date() + "@" + IOHelper.getLocalHost() + ":" + PLUGIN_NAME + " v"
+                            + IOHelper.getVersion() + " " + msg);
+            console.flush();
+        } catch (Exception e) {
+        }
+
     }
 
     @Override
     public void error(String msg) {
         System.err.println(Color.Red.format("ERROR " + new Date() + "@" + IOHelper.getLocalHost() + ":" + PLUGIN_NAME
                                             + " v" + IOHelper.getVersion() + " " + msg));
+        System.err.flush();
+        try {
+            buildConsole();
+            console.println("ERROR " + new Date() + "@" + IOHelper.getLocalHost() + ":" + PLUGIN_NAME + " v"
+                            + IOHelper.getVersion() + " " + msg);
+            console.flush();
+        } catch (Exception e) {
+        }
     }
 
     @Override
@@ -240,6 +270,14 @@ public class Main implements NSAutoParameters, NSAutoLogger {
         if (debug) {
             System.out.println(Color.Black.format("DEBUG " + new Date() + "@" + IOHelper.getLocalHost() + ":"
                                                   + PLUGIN_NAME + " v" + IOHelper.getVersion() + " " + msg));
+            System.out.flush();
+            try {
+                buildConsole();
+                console.println("DEBUG " + new Date() + "@" + IOHelper.getLocalHost() + ":" + PLUGIN_NAME + " v"
+                                + IOHelper.getVersion() + " " + msg);
+                console.flush();
+            } catch (Exception e) {
+            }
         }
 
     }
