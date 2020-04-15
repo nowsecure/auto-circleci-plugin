@@ -1,6 +1,7 @@
 # CircleCI config for Auto Mobile Security Testing
 # See https://docs.nowsecure.com/auto/integration-services/jenkins-integration/
 # https://github.com/nowsecure/auto-circleci-plugin
+---
 version: 2.1
 description: NowSecure AUTO provides fully automated, mobile appsec testing coverage
 display:
@@ -10,7 +11,7 @@ executors:
   default:
     description: Java docker container to use when running the NowSecure AUTO orb
     docker:
-    - image: circleci/openjdk:8-jdk-node
+      - image: circleci/openjdk:8-jdk-node
     environment:
       TERM: dumb
 commands:
@@ -72,16 +73,16 @@ commands:
         type: string
         default: ""
     steps:
-    - attach_workspace:
+      - attach_workspace:
         at: /tmp/workspace
-    - run: curl -Ls https://github.com/nowsecure/auto-circleci-plugin/archive/1.1.2.tar.gz | tar -xzf - -C .
+    - run: 'curl -Ls https://github.com/nowsecure/auto-circleci-plugin/archive/1.1.2.tar.gz | tar -xzf - -C .'
     - run:
-        command: cd auto-circleci-plugin-1.1.2 && gradle run -Dauto.url=<< parameters.auto_url >> -Dauto.token=<< parameters.auto_token >> -Dauto.dir=<< parameters.auto_dir >> -Dauto.file=<< parameters.auto_file >> -Dauto.group=<< parameters.auto_group >> -Dauto.wait=<< parameters.auto_wait >> -Dauto.score=<< parameters.auto_score >> -Dauto.username=<<parameters.auto_username>> -Dauto.password=<<parameters.auto_password>> -Dauto.show.status.messages=<<parameters.auto_show_status_messages>> -Dauto.stop.tests.on.status=<<parameters.auto_stop_tests_on_status>>
-        no_output_timeout: 90m
+      command: cd auto-circleci-plugin-1.1.2 && gradle run -Dauto.url=<< parameters.auto_url >> -Dauto.token=<< parameters.auto_token >> -Dauto.dir=<< parameters.auto_dir >> -Dauto.file=<< parameters.auto_file >> -Dauto.group=<< parameters.auto_group >> -Dauto.wait=<< parameters.auto_wait >> -Dauto.score=<< parameters.auto_score >> -Dauto.username=<<parameters.auto_username>> -Dauto.password=<<parameters.auto_password>> -Dauto.show.status.messages=<<parameters.auto_show_status_messages>> -Dauto.stop.tests.on.status=<<parameters.auto_stop_tests_on_status>>
+      no_output_timeout: 90m
     - persist_to_workspace:
-        root: /tmp/workspace
-        paths:
+      root: /tmp/workspace
+      paths:
         - nowsecure-auto-security-test/*
     - store_artifacts:
-        path: /tmp/workspace/nowsecure-auto-security-test
-        destination: nowsecure-auto-security-test
+      path: /tmp/workspace/nowsecure-auto-security-test
+      destination: nowsecure-auto-security-test
