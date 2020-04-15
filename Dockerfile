@@ -4,7 +4,7 @@ WORKDIR /home/gradle
 
 #
 # plugin version from https://github.com/nowsecure/auto-circleci-plugin/releases
-ARG plugin_version=1.1.2
+ARG plugin_version=1.2.0
 #
 # Default auto url
 ARG auto_url=https://lab-api.nowsecure.com
@@ -36,7 +36,7 @@ WORKDIR /home/gradle/auto-circleci-plugin-${plugin_version}
 #
 # Execute gradle task
 
-ENTRYPOINT java -jar dist/all-in-one-jar-1.1.2.jar --plugin-name circleci-nowsecure-auto-security-test --plugin-version 1.1.2 --auto-url $auto_url --auto-token $auto_token --auto-dir $artifacts_dir --auto-file $binary_file --auto-group $auto_group --auto-wait $max_wait --auto-score $min_score --auto-show-status-messages $show_status_messages --debug
+ENTRYPOINT java -jar dist/all-in-one-jar-1.2.0.jar --plugin-name circleci-nowsecure-auto-security-test --plugin-version 1.2.0 --auto-url $auto_url --auto-token $auto_token --auto-dir $artifacts_dir --auto-file $binary_file --auto-group $auto_group --auto-wait $max_wait --auto-score $min_score --auto-show-status-messages $show_status_messages --debug
 
 
 ## EXAMPLE FOR EXECUTING DOCKER IMAGE
