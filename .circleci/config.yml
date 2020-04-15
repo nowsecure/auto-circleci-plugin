@@ -1,18 +1,18 @@
 ---
 version: 2
 jobs:
-  build:
-    docker:
-      # specify the version you desire here
-      - image: circleci/openjdk:8-jdk
-    environment:
-      # Customize the JVM maximum heap limit
-      JVM_OPTS: -Xmx500m
-      TERM: dumb
-    steps:
-      - checkout
-      - run: gradle dependencies
-      - run: gradle test
-      - run: gradle jar
-      - store_artifacts:
-        path: build/libs
+    build:
+        docker:
+            # specify the version you desire here
+            - image: circleci/openjdk:8-jdk
+        environment:
+            # Customize the JVM maximum heap limit
+            JVM_OPTS: -Xmx500m
+            TERM: dumb
+        steps:
+            - checkout
+            - run: gradle dependencies
+            - run: gradle test
+            - run: gradle jar
+            - store_artifacts:
+                  path: build/libs
