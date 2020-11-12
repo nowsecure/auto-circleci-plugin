@@ -4,7 +4,7 @@ WORKDIR /home/gradle
 
 #
 # plugin version from https://github.com/nowsecure/auto-circleci-plugin/releases
-ARG plugin_version=1.2.0
+ARG plugin_version=1.2.0b
 #
 # Default auto url
 ARG auto_url=https://lab-api.nowsecure.com
