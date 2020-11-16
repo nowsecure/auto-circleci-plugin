@@ -3,10 +3,14 @@
 # Nowsecure Plugin to upload binary file, run assessment and retrieve scores
 # This script will fail if the job fails or score is below minimum threshold.
 ###
-BIN_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 
 if [[ -z "${PLUGIN_VERSION}" ]]; then
-  PLUGIN_VERSION="1.2.0d"
+  PLUGIN_VERSION="1.2.0e"
+fi
+
+if [[ -z "${PLUGIN_JAR}" ]]; then
+  BIN_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
+  PLUGIN_JAR=${BIN_DIR}/../dist/all-in-one-jar-${PLUGIN_VERSION}.jar
 fi
 
 if [[ -z "${AUTO_URL}" ]]; then
@@ -45,4 +49,4 @@ if [[ -z "${SHOW_STATUS_MESSAGES}" ]]; then
   SHOW_STATUS_MESSAGES=true
 fi
 
-exec java -jar ${BIN_DIR}/../dist/all-in-one-jar-${PLUGIN_VERSION}.jar --plugin-name circleci-nowsecure-auto-security-test --plugin-version ${PLUGIN_VERSION} --auto-url $AUTO_URL --auto-token $AUTO_TOKEN --auto-dir $ARTIFACTS_DIR --auto-file $BINARY_FILE --auto-group $AUTO_GROUP --auto-wait $MAX_WAIT --auto-score $MIN_SCORE --auto-show-status-messages $SHOW_STATUS_MESSAGES --debug
+exec java -jar ${PLUGIN_JAR} --plugin-name circleci-nowsecure-auto-security-test --plugin-version ${PLUGIN_VERSION} --auto-url $AUTO_URL --auto-token $AUTO_TOKEN --auto-dir $ARTIFACTS_DIR --auto-file $BINARY_FILE --auto-group $AUTO_GROUP --auto-wait $MAX_WAIT --auto-score $MIN_SCORE --auto-show-status-messages $SHOW_STATUS_MESSAGES --debug
