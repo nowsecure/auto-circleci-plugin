@@ -1,4 +1,7 @@
 FROM openjdk:8
+# plugin version from https://github.com/nowsecure/auto-circleci-plugin/releases
+ARG plugin_version=1.2.0c
+ENV PLUGIN_VERSION $plugin_version
 #
 # Download nowsecure plugin source
 RUN mkdir -p /usr/local/share/nowsecure
