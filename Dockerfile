@@ -1,12 +1,10 @@
 FROM openjdk:8
 # plugin version from https://github.com/nowsecure/auto-circleci-plugin/releases
-ARG plugin_version=1.2.0c
-ENV PLUGIN_VERSION $plugin_version
+ENV PLUGIN_VERSION 1.2.0d
 #
 # Download nowsecure plugin source
 RUN mkdir -p /usr/local/share/nowsecure
 RUN curl -Ls https://github.com/nowsecure/auto-circleci-plugin/archive/${PLUGIN_VERSION}.tar.gz | tar -xzf - -C /usr/local/share/nowsecure
-RUN chmod 755 /usr/local/share/nowsecure/auto-circleci-plugin-${PLUGIN_VERSION}/bin/nowsecure_plugin.sh
 #
 ### Execute script to execute nowsecure plugin
 ### You can customize plugin using following environment variables:
@@ -18,7 +16,7 @@ RUN chmod 755 /usr/local/share/nowsecure/auto-circleci-plugin-${PLUGIN_VERSION}/
 ### ARTIFACTS_DIR - (Optional) artifacts directory where json files are stored
 #
 
-CMD /usr/local/share/nowsecure/auto-circleci-plugin-${PLUGIN_VERSION}/bin/nowsecure_plugin.sh
+CMD /usr/local/share/nowsecure/auto-circleci-plugin-${PLUGIN_VERSION}/bin/nowsecure.sh
 
 ## EXAMPLE FOR EXECUTING DOCKER IMAGE
 # docker run -v ~/Desktop/apk:/source -v /tmp:/artifacts -e AUTO_TOKEN=$AUTO_TOKEN -e AUTO_GROUP=$AUTO_GROUP -e BINARY_FILE=/source/test.apk -e ARTIFACTS_DIR=/artifacts -e MAX_WAIT=30 -e MIN_SCORE=50 -it --rm $IMAGE_ID

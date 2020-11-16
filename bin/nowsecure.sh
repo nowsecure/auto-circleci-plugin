@@ -6,7 +6,7 @@
 BIN_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 
 if [[ -z "${PLUGIN_VERSION}" ]]; then
-  PLUGIN_VERSION="1.2.0c"
+  PLUGIN_VERSION="1.2.0d"
 fi
 
 if [[ -z "${AUTO_URL}" ]]; then
