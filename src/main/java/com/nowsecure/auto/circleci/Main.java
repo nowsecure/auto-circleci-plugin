@@ -236,7 +236,7 @@ public class Main implements NSAutoParameters, NSAutoLogger {
     @Override
     public void info(String msg, Color color) {
         if (color == null) {
-            color = Color.Blue;
+            color = Color.Cyan;
         }
         System.out.println(color.format("INFO " + new Date() + "@" + IOHelper.getLocalHost() + ":" + PLUGIN_NAME + " v"
                                         + IOHelper.getVersion() + " " + msg));
