@@ -22,9 +22,15 @@ interface ColorConstants {
 }
 
 public enum Color {
-    Black(ColorConstants.ANSI_BLACK), Red(ColorConstants.ANSI_RED), Green(ColorConstants.ANSI_GREEN), Yellow(
-            ColorConstants.ANSI_YELLOW), Blue(ColorConstants.ANSI_BLUE), Purple(
-                    ColorConstants.ANSI_PURPLE), Cyan(ColorConstants.ANSI_CYAN), White(ColorConstants.ANSI_WHITE);
+    Black(ColorConstants.ANSI_BLACK),
+    Red(ColorConstants.ANSI_RED),
+    Green(ColorConstants.ANSI_GREEN),
+    Yellow(ColorConstants.ANSI_YELLOW),
+    Blue(ColorConstants.ANSI_BLUE),
+    Purple(ColorConstants.ANSI_PURPLE),
+    Cyan(ColorConstants.ANSI_CYAN),
+    White(ColorConstants.ANSI_WHITE);
+
     public final String code;
 
     Color(String code) {
