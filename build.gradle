@@ -36,15 +36,7 @@ jar {
       'Main-Class': mainClassName
     )
   }
-}
-
-task fatJar(type: Jar) {
-    manifest {
-        attributes 'Main-Class': mainClassName
-    }
-    baseName = 'all-in-one-jar'
-    from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
-    with jar
+  from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
 }
 
 task copyJar(type: Copy) {

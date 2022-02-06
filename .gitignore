@@ -3,9 +3,7 @@
 .project
 .settings/
 bin/
-build*
+build/
 dist/
-*.sh
 
-auto-circleci-plugin-*
-*.tar.gz
+nowsecure-ci

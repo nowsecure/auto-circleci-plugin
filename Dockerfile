@@ -15,7 +15,7 @@ FROM openjdk:8 as build
 COPY . .
 ENV JVM_OPTS -Xmx500m
 
-RUN ./gradlew build
+RUN ./package.sh
 
 FROM openjdk:8-jre
 
@@ -29,6 +29,7 @@ RUN addgroup --gid 1000 ${APP_USER} \
 WORKDIR ${APP_DIR}
 
 COPY --from=build --chown=$APP_USER:$APP_USER \
-    /build/libs/auto-circleci-plugin.jar .
+    nowsecure-ci .
 
-CMD ["java", "-jar", "auto-circleci-plugin.jar"]
+ENTRYPOINT ["./nowsecure-ci"]
+CMD [ "--help" ]

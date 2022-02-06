@@ -1,6 +1,5 @@
 # NowSecure AUTO CircleCI Plugin
 
-
 This plugin adds the ability to perform automatic mobile app security testing for Android and iOS mobile apps through the NowSecure AUTO test engine.
 
 ## Summary:
