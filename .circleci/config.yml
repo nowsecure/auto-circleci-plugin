@@ -3,7 +3,7 @@ version: 2.1
 
 orbs:
   # Replace this with your own!
-  # auto_ci: dylanhitt/ci-auto-orb@<<pipeline.parameters.dev-orb-version>>
+  auto_ci: dylanhitt/ci-auto-orb@<<pipeline.parameters.dev-orb-version>>
   orb-tools: circleci/orb-tools@10.0
   bats: circleci/bats@1.0
   shellcheck: circleci/shellcheck@2.0
@@ -23,6 +23,11 @@ parameters:
       A "dev:alpha" version must exist for the initial pipeline run.
     type: string
     default: "dev:alpha"
+  image-version:
+    description: >
+      The development image version
+    type: string
+    default: "dev:alpha"
 
 dev-filters: &dev-filters
   filters:
@@ -32,27 +37,41 @@ dev-filters: &dev-filters
       ignore: /.*/
 
 workflows:
-  Development:
+  development:
+    unless: << pipeline.parameters.run-integration-tests >>
     jobs:
-      - lint: # Lint Yaml files
+      - orb-tools/lint:
+          <<: *dev-filters
+      - orb-tools/pack:
           <<: *dev-filters
       - build:
           <<: *dev-filters
       - orb-tools/publish-dev:
           orb-name: dylanhitt/ci-auto-orb
           context: General
+          <<: *dev-filters
           requires:
-            - lint
+            - orb-tools/lint
+            - orb-tools/pack
             - build
+      - orb-tools/trigger-integration-tests-workflow:
+          name: trigger-integration-dev
+          context: General
+          <<: *dev-filters
+          pipeline-param-map: >-
+            {\"run-integration-tests\": true, \"dev-orb-version\":
+            \"dev:${CIRCLE_SHA1:0:7}\", \"image-version\":
+            \"${CIRCLE_SHA1:0:7}\"}
+          requires:
+            - orb-tools/publish-dev
 
-  # Stable: we arte just gonna publish here, so just promotion of orb and docker image
+  integration-test_deploy:
+    when: << pipeline.parameters.run-integration-tests >>
+    jobs:
+      - integration-test
 
 
 jobs:
-  lint:
-    - orb-tools/lint
-    - orb-tools/pack
-
   build:
     environment:
       IMAGE_NAME: dylanhitt1/auto-circelci-plugin
@@ -74,20 +93,28 @@ jobs:
           name: Build Image
           command: |
             docker build -t ${IMAGE_NAME}:${CIRCLE_SHA1:0:7} \
-              -t ${IMAGE_NAME}:${CIRCLE_SHA1:0:7} \
               -f Dockerfile .
       - run:
           name: Push
           command: docker push ${IMAGE_NAME}:${CIRCLE_SHA1:0:7}
+      - run:
+          name: Push
+          command: echo $AUTO_TOKEN; echo $AUTO_GROUP
 
   integration-test:
+    docker:
+      - image: dylanhitt1/auto-circelci-plugin:<<pipeline.parameters.image-version>>
     steps:
-      - |
-        curl -L \
-        https://github.com/bitbar/test-samples/raw/master/apps/android/bitbar-sample-app.apk
-        -o app.apk
-      - 
-
-  # publish-orb:
-
-  # publish-docker:
+      - run:
+          name: Push
+          command: echo $AUTO_TOKEN; echo $AUTO_GROUP
+      - run:
+          name: Get APK file
+          command: |
+            curl -L \
+            https://github.com/bitbar/test-samples/raw/master/apps/android/bitbar-sample-app.apk \
+            -o app.apk
+      - auto_ci/mobile_security_test:
+          auto_file: app.apk
+          auto_score: "0"
+          auto_show_status_messages: "true"
