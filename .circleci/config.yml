@@ -40,6 +40,13 @@ workflows:
           <<: *dev-filters
       - build:
           <<: *dev-filters
+      - orb-tools/publish-dev:
+          orb-name: dylanhitt/ci-auto-orb
+          context: General
+          requires:
+            - orb-tools/lint
+            - orb-tools/pack
+            - build
 
   # Stable: we arte just gonna publish here, so just promotion of orb and docker image
 
