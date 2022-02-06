@@ -24,15 +24,29 @@ parameters:
     type: string
     default: "dev:alpha"
 
+dev-filters: &dev-filters
+  filters:
+    branches:
+      ignore: master
+    tags:
+      ignore: /.*/
+
+workflows:
+  Development:
+    jobs:
+      - orb-tools/lint: # Lint Yaml files
+          <<: *dev-filters
+      - orb-tools/pack: # Pack orb source
+          <<: *dev-filters
+      - build:
+          <<: *dev-filters
+
+  # Stable: we arte just gonna publish here, so just promotion of orb and docker image
+
+
 jobs:
-  # Define one or more jobs which will utilize your orb's commands and parameters to validate your changes.
-  integration-test-1:
-    docker:
-      - image: cimg/base:stable
-    steps:
-      - checkout
-      - auto_ci/greet
-  
+  # Define one or more jobs which will utilize your orb's commands and parameters to validate your changes.  
+
   build:
     environment:
       IMAGE_NAME: dylanhitt1/auto-circelci-plugin
@@ -59,10 +73,8 @@ jobs:
           name: Push
           command: docker push ${IMAGE_NAME}:${CIRCLE_SHA1:0:7}
 
-workflows:
-  build-image:
-    jobs:
-      - build:
-          filters:
-            branches:
-              ignore: master
+  # integration-test:
+
+  # publish-orb:
+
+  # publish-docker:
