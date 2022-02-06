@@ -3,7 +3,7 @@ version: 2.1
 
 orbs:
   # Replace this with your own!
-  auto_ci: nowsecure/ci-auto-orb@<<pipeline.parameters.dev-orb-version>>
+  # auto_ci: dylanhitt/ci-auto-orb@<<pipeline.parameters.dev-orb-version>>
   orb-tools: circleci/orb-tools@10.0
   bats: circleci/bats@1.0
   shellcheck: circleci/shellcheck@2.0
@@ -34,13 +34,35 @@ jobs:
       - auto_ci/greet
   
   build:
+    environment:
+      IMAGE_NAME: dylanhitt1/auto-circelci-plugin
     docker:
       - image: cimg/base:stable
         auth:
           username: dylanhitt1
           password: $DOCKERHUB_PASSWORD
+    resource_class: medium
     steps:
       - checkout
       - setup_remote_docker:
-          version: 19.03.13
+          version: 20.10.11
           docker_layer_caching: true
+      - run: 
+          name: Login
+          command: echo $DOCKERHUB_PASSWORD | docker login -u dylanhitt1 --password-stdin
+      - run:
+          name: Build Image
+          command: |
+            docker build -t ${IMAGE_NAME}:${CIRCLE_SHA1:0:7} \
+              -f Dockerfile .
+      - run: 
+          name: Push
+          command: docker push ${IMAGE_NAME}:${CIRCLE_SHA1:0:7}
+
+workflows:
+  build-image:
+    jobs:
+      - build:
+          filters:
+            branches:
+              ignore: master
