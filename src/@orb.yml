@@ -6,82 +6,100 @@ description: NowSecure AUTO provides fully automated, mobile appsec testing cove
 display:
   source_url: https://github.com/nowsecure/auto-circleci-plugin
   home_url: https://www.nowsecure.com/
-executors:
-  default:
-    description: Java docker container to use when running the NowSecure AUTO orb
-    docker:
-    - image: circleci/openjdk:8-jdk-node
-    environment:
-      TERM: dumb
 commands:
   mobile_security_test:
     description: Executes security test using NowSecure AUTO.
     parameters:
-      # url for nowsecure auto API
       auto_url:
         description: url for nowsecure auto API
         type: string
         default: https://lab-api.nowsecure.com
-      # API token, visit https://docs.nowsecure.com/auto/integration-services/jenkins-integration to generate token
+
       auto_token:
-        description: API token, visit https://docs.nowsecure.com/auto/integration-services/jenkins-integration to generate token
+        description: |
+          API token, visit
+          https://docs.nowsecure.com/auto/integration-services/jenkins-integration
+          to generate token
         type: string
         default: $AUTO_TOKEN
-      # Specify group if you belong to multiple groups
+
       auto_group:
         description: Specify group if you belong to multiple groups
         type: string
         default: $AUTO_GROUP
-      # Specify artifacts-dir where security artifacts will be stored
+
       auto_dir:
-        description: Specify artifacts-dir where security artifacts will be stored
+        description: |
+          Specify artifacts-dir where security artifacts will be stored
         type: string
         default: "/tmp/workspace/nowsecure-auto-security-test"
-      # Specify absolute path of mobile binary, you would need to attach workspace to this plugin step
+
       auto_file:
-        description: Specify absolute path of mobile binary, you would need to attach workspace to this plugin step
+        description: |
+          Specify absolute path of mobile binary,
+          you would need to attach workspace to this plugin step
         type: string
-      # Specify maximum time to wait for results, if you specify 0 then plugin won't wait for the results
+
       auto_wait:
-        description: Specify maximum time to wait for results, if you specify 0 then plugin will not wait for the results
+        description: |
+          Specify maximum time to wait for results,
+          if you specify 0 then plugin will not wait for the results
         type: string
         default: "30"
-      # Specify minimum score the app should get from security testing, if you specify 0 then score won't be evaulated otherwise build will be marked as failure if security score is below this number
+
       auto_score:
-        description: Specify minimum score the app should get from security testing, if you specify 0 then score will not be evaulated otherwise build will be marked as failure if security score is below this number
+        description: |
+          Specify minimum score the app should get
+          from security testing, if you specify 0 then score will
+          not be evaulated otherwise build will be
+          marked as failure if security score is below this number
         type: string
         default: "50"
-      # Specify test username for automation testing
+
       auto_username:
-        description: Specify test username for automation testing
+        description: |
+          Specify test username for automation testing
         type: string
         default: ""
-      # Specify test password for automation testing
+
       auto_password:
         description: Specify test password for automation testing
         type: string
         default: ""
-      # Specify flag to show status messages from automation testing
+
       auto_show_status_messages:
-        description: Specify flag to show status messages from automation testing
+        description: |
+          Specify flag to show status messages from automation testing
         type: string
         default: "false"
-      # Specify flag to show status messages from automation testing
+
       auto_stop_tests_on_status:
-        description: Specify flag to show status messages from automation testing
+        description: |
+          Specify flag to show status messages from automation testing
         type: string
         default: ""
+
     steps:
-    - attach_workspace:
-        at: /tmp/workspace
-    - run: curl -Ls https://github.com/nowsecure/auto-circleci-plugin/archive/1.2.1.tar.gz | tar -xzf - -C .
-    - run:
-        command: cd auto-circleci-plugin-1.2.1 && ./gradlew run -Dauto.url=<< parameters.auto_url >> -Dauto.token=<< parameters.auto_token >> -Dauto.dir=<< parameters.auto_dir >> -Dauto.file=<< parameters.auto_file >> -Dauto.group=<< parameters.auto_group >> -Dauto.wait=<< parameters.auto_wait >> -Dauto.score=<< parameters.auto_score >> -Dauto.username=<<parameters.auto_username>> -Dauto.password=<<parameters.auto_password>> -Dauto.show.status.messages=<<parameters.auto_show_status_messages>> -Dauto.stop.tests.on.status=<<parameters.auto_stop_tests_on_status>>
-        no_output_timeout: 90m
-    - persist_to_workspace:
-        root: /tmp/workspace
-        paths:
-        - nowsecure-auto-security-test/*
-    - store_artifacts:
-        path: /tmp/workspace/nowsecure-auto-security-test
-        destination: nowsecure-auto-security-test
+      - attach_workspace:
+          at: /tmp/workspace
+      - run:
+          command: >
+            nowsecure-ci --auto-url=<< parameters.auto_url >> \
+              --auto-token=<< parameters.auto_token >> \
+              --auto-dir=<< parameters.auto_dir >> \
+              --auto-file=<< parameters.auto_file >> \
+              --auto-group=<< parameters.auto_group >> \
+              --auto-wait=<< parameters.auto_wait >> \
+              --auto-score=<< parameters.auto_score >> \
+              --auto-username=<<parameters.auto_username>> \
+              --auto-password=<<parameters.auto_password>> \
+              --auto-show-status-messages=<<parameters.auto_show_status_messages>> \
+              --auto-stop-tests-on-status=<<parameters.auto_stop_tests_on_status>>
+          no_output_timeout: 90m
+      - persist_to_workspace:
+          root: /tmp/workspace
+          paths:
+            - nowsecure-auto-security-test/*
+      - store_artifacts:
+          path: /tmp/workspace/nowsecure-auto-security-test
+          destination: nowsecure-auto-security-test

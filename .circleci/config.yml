@@ -34,9 +34,7 @@ dev-filters: &dev-filters
 workflows:
   Development:
     jobs:
-      - orb-tools/lint: # Lint Yaml files
-          <<: *dev-filters
-      - orb-tools/pack: # Pack orb source
+      - lint: # Lint Yaml files
           <<: *dev-filters
       - build:
           <<: *dev-filters
@@ -44,15 +42,16 @@ workflows:
           orb-name: dylanhitt/ci-auto-orb
           context: General
           requires:
-            - orb-tools/lint
-            - orb-tools/pack
+            - lint
             - build
 
   # Stable: we arte just gonna publish here, so just promotion of orb and docker image
 
 
 jobs:
-  # Define one or more jobs which will utilize your orb's commands and parameters to validate your changes.
+  lint:
+    - orb-tools/lint
+    - orb-tools/pack
 
   build:
     environment:
@@ -75,12 +74,19 @@ jobs:
           name: Build Image
           command: |
             docker build -t ${IMAGE_NAME}:${CIRCLE_SHA1:0:7} \
+              -t ${IMAGE_NAME}:${CIRCLE_SHA1:0:7} \
               -f Dockerfile .
       - run:
           name: Push
           command: docker push ${IMAGE_NAME}:${CIRCLE_SHA1:0:7}
 
-  # integration-test:
+  integration-test:
+    steps:
+      - |
+        curl -L \
+        https://github.com/bitbar/test-samples/raw/master/apps/android/bitbar-sample-app.apk
+        -o app.apk
+      - 
 
   # publish-orb:
 
