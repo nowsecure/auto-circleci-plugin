@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 FROM openjdk:8
 # plugin version from https://github.com/nowsecure/auto-circleci-plugin/releases
 ENV PLUGIN_VERSION 1.2.1
@@ -7,22 +8,23 @@ ENV PLUGIN_VERSION 1.2.1
 RUN mkdir -p /usr/local/share/nowsecure
 RUN curl -Ls https://github.com/nowsecure/auto-circleci-plugin/archive/${PLUGIN_VERSION}.tar.gz | tar -xzf - -C /usr/local/share/nowsecure
 RUN cp /usr/local/share/nowsecure/auto-circleci-plugin-${PLUGIN_VERSION}/bin/nowsecure.sh /usr/local/bin/nowsecure.sh
+=======
+FROM openjdk:8 as build
+>>>>>>> 8f7e91f (remove unwanted bins and jars, update dockerfile to bundle the entire plugin)
 
-ENV PLUGIN_JAR /usr/local/share/nowsecure/auto-circleci-plugin-${PLUGIN_VERSION}/dist/all-in-one-jar-${PLUGIN_VERSION}.jar
-#
-### Execute script to execute nowsecure plugin
-### You can customize plugin using following environment variables:
-### AUTO_TOKEN - (Required) Specify auto token from your account
-### AUTO_GROUP - (Required) Specify group for your account
-### BINARY_FILE - (Required) Path to Android apk or IOS ipa - this file must be mounted via volume for the access
-### MAX_WAIT - (Optional) Default max wait in minutes for the mobile analysis
-### MIN_SCORE - (Optional) Minimum score the app must have otherwise it would fail
-### ARTIFACTS_DIR - (Optional) artifacts directory where json files are stored
-#
+COPY . .
+ENV JVM_OPTS -Xmx500m
 
-CMD /usr/local/bin/nowsecure.sh
+RUN ./gradlew build
 
-## EXAMPLE FOR EXECUTING DOCKER IMAGE
-# docker run -v ~/Desktop/apk:/source -v /tmp:/artifacts -e AUTO_TOKEN=$AUTO_TOKEN -e AUTO_GROUP=$AUTO_GROUP -e BINARY_FILE=/source/test.apk -e ARTIFACTS_DIR=/artifacts -e MAX_WAIT=30 -e MIN_SCORE=50 -it --rm $IMAGE_ID
-# If MIN_SCORE is higher than zero and security score is below that number, the docker job would fail, e.g.
-# java.io.IOException: Test failed because score (45.0) is lower than threshold 50
+FROM openjdk:8-jre
+
+ENV APP_USER=javauser
+ENV APP_DIR="/${APP_USER}"
+
+WORKDIR ${APP_DIR}
+
+COPY --from=build --chown=$APP_USER:$APP_USER \
+    /build/libs/auto-circleci-plugin.jar .
+
+CMD ["java", "-jar", "auto-circleci-plugin.jar"]
