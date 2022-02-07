@@ -35,8 +35,6 @@ public class Main implements NSAutoParameters, NSAutoLogger {
     private String apiKey;
     private File artifactsDir;
     private String description;
-    private String username;
-    private String password;
     private boolean showStatusMessages;
     private String stopTestsForStatusMessage;
     private boolean debug;
@@ -162,24 +160,6 @@ public class Main implements NSAutoParameters, NSAutoLogger {
     }
 
     @Override
-    public String getUsername() {
-        return username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
-    @Override
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    @Override
     public boolean isShowStatusMessages() {
         return showStatusMessages;
     }
@@ -289,12 +269,20 @@ public class Main implements NSAutoParameters, NSAutoLogger {
 
     @Override
     public String toString() {
-        return "Args [apiUrl=" + apiUrl + ", group=" + group + ", file=" + file + ", waitMinutes=" + waitMinutes
-               + ", breakBuildOnScore=" + breakBuildOnScore + ", scoreThreshold=" + scoreThreshold + ", apiKey="
-               + apiKey + ", artifactsDir=" + artifactsDir + ", description=" + description + ", username=" + username
-               + ", password=" + password + ", showStatusMessages=" + showStatusMessages
-               + ", stopTestsForStatusMessage=" + stopTestsForStatusMessage + ", debug=" + debug + ", proxyEnabled="
-               + proxyEnabled + ", proxySettings=" + proxySettings + "]";
+        String providedArgs = String.format(
+            "Args:\n" +
+            "    url:                  %s\n" +
+            "    artifacts-dir:        %s\n" +
+            "    file:                 %s\n" +
+            "    group:                %s\n" +
+            "    wait:                 %s\n" +
+            "    score:                %s\n" +
+            "    show-status-messages: %s\n" +
+            "    stop-tests-on-status: %s\n",
+            apiUrl, artifactsDir, file, group, waitMinutes, scoreThreshold, showStatusMessages, stopTestsForStatusMessage
+        );
+
+        return providedArgs;
     }
 
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -401,10 +389,6 @@ public class Main implements NSAutoParameters, NSAutoLogger {
                 PLUGIN_NAME = args[i + 1].trim();
             } else if ("--plugin-version".equals(args[i])) {
                 IOHelper.VERSION = args[i + 1].trim();
-            } else if ("--auto-username".equals(args[i])) {
-                this.username = args[i + 1].trim();
-            } else if ("--auto-password".equals(args[i])) {
-                this.password = args[i + 1].trim();
             } else if ("--auto-show-status-messages".equals(args[i])) {
                 this.showStatusMessages = Boolean.valueOf(args[i + 1].trim());
             } else if ("--auto-stop-tests-on-status".equals(args[i])) {
@@ -453,12 +437,6 @@ public class Main implements NSAutoParameters, NSAutoLogger {
         }
         if (this.scoreThreshold == 0) {
             this.scoreThreshold = parseInt("auto.score");
-        }
-        if (isEmpty(this.username)) {
-            this.username = getString("auto.username", "");
-        }
-        if (isEmpty(this.password)) {
-            this.password = getString("auto.password", "");
         }
         if (!this.showStatusMessages) {
             this.showStatusMessages = getString("auto.show.status.messages", "").length() > 0;

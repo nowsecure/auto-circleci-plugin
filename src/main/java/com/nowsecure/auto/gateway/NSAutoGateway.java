@@ -356,14 +356,11 @@ public class NSAutoGateway {
         StringBuilder sb = new StringBuilder();
         for (Map.Entry<?, ?> e : map.entrySet()) {
             String key = e.getKey().toString().toLowerCase();
-            // if (!key.contains("password") && key.matches(".*(http|proxy).*"))
-            // {
             String val = e.getValue().toString();
             if (val.length() > 80) {
                 val = val.substring(0, 80);
             }
             sb.append("\t" + e.getKey() + " = " + val + "\r\n");
-            // }
         }
         logger.info(prefix + sb + "\n\n");
     }

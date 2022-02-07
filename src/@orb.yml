@@ -56,17 +56,6 @@ commands:
         type: string
         default: "50"
 
-      auto_username:
-        description: |
-          Specify test username for automation testing
-        type: string
-        default: ""
-
-      auto_password:
-        description: Specify test password for automation testing
-        type: string
-        default: ""
-
       auto_show_status_messages:
         description: |
           Specify flag to show status messages from automation testing
@@ -91,8 +80,6 @@ commands:
               --auto-group << parameters.auto_group >> \
               --auto-wait << parameters.auto_wait >> \
               --auto-score << parameters.auto_score >> \
-              --auto-username <<parameters.auto_username>> \
-              --auto-password <<parameters.auto_password>> \
               --auto-show-status-messages <<parameters.auto_show_status_messages>> \
               --auto-stop-tests-on-status <<parameters.auto_stop_tests_on_status>>
           no_output_timeout: 90m

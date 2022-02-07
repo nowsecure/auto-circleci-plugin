@@ -38,8 +38,6 @@ public class NSAutoGatewayTest implements NSAutoParameters, NSAutoLogger, IOHelp
     private int scoreThreshold = 50;
     private String apiKey = "mykey";
     private String description = "blah";
-    private String username;
-    private String password;
     private boolean showStatusMessages;
     private String stopTestsForStatusMessage;
     private boolean debug;
@@ -254,24 +252,6 @@ public class NSAutoGatewayTest implements NSAutoParameters, NSAutoLogger, IOHelp
     @Override
     public int getScoreThreshold() {
         return scoreThreshold;
-    }
-
-    @Override
-    public String getUsername() {
-        return username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
-    @Override
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
     }
 
     @Override
