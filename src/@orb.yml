@@ -21,12 +21,12 @@ commands:
           https://docs.nowsecure.com/auto/integration-services/jenkins-integration
           to generate token
         type: string
-        default: $TOKEN
+        default: $AUTO_TOKEN
 
       group:
         description: Specify group if you belong to multiple groups
         type: string
-        default: $GROUP
+        default: $AUTO_GROUP
 
       artifact_dir:
         description: |

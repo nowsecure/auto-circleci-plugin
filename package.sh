@@ -13,5 +13,5 @@ cat << EOF > nowsecure-auto
 exec java -jar \$0 "\$@"
 EOF
 
-cat build/libs/auto-circleci-plugin.jar >> nowsecure-auto
+cat build/libs/nowsecure-auto.jar >> nowsecure-auto
 chmod +x nowsecure-auto
