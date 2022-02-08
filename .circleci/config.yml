@@ -70,11 +70,10 @@ workflows:
     jobs:
       - integration-test
 
-
 jobs:
   build:
     environment:
-      IMAGE_NAME: dylanhitt1/nowsecure-ci
+      IMAGE_NAME: dylanhitt1/nowsecure-auto
     docker:
       - image: cimg/base:stable
         auth:
@@ -103,7 +102,7 @@ jobs:
 
   integration-test:
     docker:
-      - image: dylanhitt1/nowsecure-ci:<<pipeline.parameters.image-version>>
+      - image: dylanhitt1/nowsecure-auto:<<pipeline.parameters.image-version>>
     steps:
       - run:
           name: Push
@@ -115,6 +114,6 @@ jobs:
             https://github.com/bitbar/test-samples/raw/master/apps/android/bitbar-sample-app.apk \
             -o app.apk
       - auto_ci/mobile_security_test:
-          auto_file: app.apk
-          auto_score: "0"
-          auto_show_status_messages: "true"
+          file: app.apk
+          score: "0"
+          show_status_messages: "true"

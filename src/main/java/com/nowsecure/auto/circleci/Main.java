@@ -24,8 +24,9 @@ import com.nowsecure.auto.utils.IOHelperI;
  */
 public class Main implements NSAutoParameters, NSAutoLogger {
     private static final int TIMEOUT = 60000;
-    private static String PLUGIN_NAME = "circleci-nowsecure-auto-security-test";
+    private static String PLUGIN_NAME = "nowsecure-auto";
     private static final String DEFAULT_URL = "https://lab-api.nowsecure.com";
+    private static final String ARTIFACTS_DIR = "nowsecure-auto_artifacts";
     private String apiUrl;
     private String group;
     private File file;
@@ -270,16 +271,15 @@ public class Main implements NSAutoParameters, NSAutoLogger {
     @Override
     public String toString() {
         String providedArgs = String.format(
-            "Args:\n" +
+            "Given Args:\n" +
             "    url:                  %s\n" +
             "    artifacts-dir:        %s\n" +
             "    file:                 %s\n" +
             "    group:                %s\n" +
             "    wait:                 %s\n" +
             "    score:                %s\n" +
-            "    show-status-messages: %s\n" +
-            "    stop-tests-on-status: %s\n",
-            apiUrl, artifactsDir, file, group, waitMinutes, scoreThreshold, showStatusMessages, stopTestsForStatusMessage
+            "    show-status-messages: %s\n",
+            apiUrl, artifactsDir, file, group, waitMinutes, scoreThreshold, showStatusMessages
         );
 
         return providedArgs;
@@ -342,25 +342,25 @@ public class Main implements NSAutoParameters, NSAutoLogger {
     private void usage(String msg) {
         System.err.println(this);
 
-        System.err.println(msg);
-        System.err.println("Usage:\n");
+        System.err.println("ERROR: " + msg);
+        System.err.println();
+        System.err.println("Usage:");
         System.err
                 .println(
-                        "\tgradle run --args=\"--auto-url auto-url --auto-dir artifacts-dir --auto-token api-token --auto-group user-group"
-                         + " --auto-username test-username --auto-password test-password --auto-show-status-messages true|false to show status-messages"
-                         + " --auto-stop-tests-on-status status-message to stop tests"
-                         + " --auto-file binary-file --auto-wait wait-for-completion-in-minutes --auto-score min-score-to-pass --plugin-name --plugin-version\"");
-        System.err.println("\tOR");
-        System.err
-                .println(
-                        "Usage: gradle run -Dauto.dir=artifacts-dir -Dauto.url=auto-url -Dauto.token=api-token -Dauto.file=mobile-binary-file"
-                         + " -Dauto.username test-username -Dauto.password test-password -Dauto.show.status.messages true|false show status-messages"
-                         + " -Dauto.stop.tests.on.status status-message to stop tests"
-                         + " -Dauto.group=user-group -Dauto.file=binary-file -Dauto.wait=wait-for-completion-in-minutes -Dauto.score=min-score-to-pass");
-        System.err.println("\tDefault url is " + DEFAULT_URL);
-        System.err.println("\tDefault auto-wait is 0, which means just upload without waiting for results");
-        System.err.println(
-                "\tDefault auto-score is 0, which means build won't break, otherwise build will break if the app score is lower than this number");
+                        "\t./nowsecure-auto --url https://lab-api.nowsecure.com --file your.apk --token <nowsecure-api-token> --group <nowsecure-group>");
+
+        System.err.println();
+        System.err.println("Options:");
+        System.err.println("\t--file                  Required                                absolute path of mobile binary");
+        System.err.println("\t--token                 Required                                API token");
+        System.err.println("\t--group                 Default: \"\"                             specify group if you belong to multiple groups");
+        System.err.println("\t--url                   Default: https://lab-api.nowsecure.com  url for nowsecure API");
+        System.err.println("\t--wait                  Default: 0                              wait for results in minutes, 0 causes no wait");
+        System.err.println("\t--score                 Default: 50                             min score. Will exit 1 if score is less than");
+        System.err.println("\t--artifacts-dir         Default: ${PWD}/nowsecure-auto_artifacts  directory to place test artifacts");
+        System.err.println("\t--show-status-messages  Default: false                          show status messages from automation testing");
+        System.err.println("\t--debug                 Default: false");
+        
         System.exit(1);
     }
 
@@ -368,22 +368,21 @@ public class Main implements NSAutoParameters, NSAutoLogger {
         return m == null || m.trim().length() == 0;
     }
 
-    //
     private void parseArgs(String[] args) {
         for (int i = 0; i < args.length - 1; i++) {
-            if ("--auto-url".equals(args[i])) {
+            if ("--url".equals(args[i])) {
                 this.apiUrl = args[i + 1].trim();
-            } else if ("--auto-group".equals(args[i])) {
+            } else if ("--group".equals(args[i])) {
                 this.group = args[i + 1].trim();
-            } else if ("--auto-dir".equals(args[i])) {
+            } else if ("--artifacts-dir".equals(args[i])) {
                 this.artifactsDir = new File(args[i + 1].trim());
-            } else if ("--auto-file".equals(args[i])) {
+            } else if ("--file".equals(args[i])) {
                 this.file = new File(args[i + 1].trim());
-            } else if ("--auto-token".equals(args[i])) {
+            } else if ("--token".equals(args[i])) {
                 this.apiKey = args[i + 1].trim();
-            } else if ("--auto-wait".equals(args[i])) {
+            } else if ("--wait".equals(args[i])) {
                 this.waitMinutes = Integer.parseInt(args[i + 1].trim());
-            } else if ("--auto-score".equals(args[i])) {
+            } else if ("--score".equals(args[i])) {
                 this.scoreThreshold = Integer.parseInt(args[i + 1].trim());
             } else if ("--plugin-name".equals(args[i])) {
                 PLUGIN_NAME = args[i + 1].trim();
@@ -399,53 +398,29 @@ public class Main implements NSAutoParameters, NSAutoLogger {
                 validateDnsUrlConnection = false;
             }
         }
-        if (isEmpty(this.group)) {
-            this.group = getString("auto.group", "");
-        }
-        if (isEmpty(this.apiUrl)) {
-            this.apiUrl = getString("auto.url", DEFAULT_URL);
-        }
-        if (isEmpty(this.apiKey)) {
-            this.apiKey = getString("auto.token", "");
-            if (this.apiKey.length() == 0) {
-                this.usage("auto-token is not defined");
-            }
-        }
-        if (file == null) {
-            String val = getString("auto.file", "");
-            if (val.length() == 0) {
-                this.usage("auto-file is not defined");
-            }
-            this.file = new File(val);
-        }
-        if (!file.exists()) {
-            this.usage("auto-file doesn't exist, please specify full path " + file.getAbsolutePath());
-        }
 
         if (artifactsDir == null) {
-            String val = getString("auto.dir", "");
-            if (val.length() == 0) {
-                this.usage("auto-dir is not defined");
-            }
-            this.artifactsDir = new File(val);
+            this.artifactsDir = new File(ARTIFACTS_DIR);
         }
+
+        if (isEmpty(this.apiUrl)) {
+            this.apiUrl = DEFAULT_URL;
+        }
+        
+        if (isEmpty(this.apiKey)) {
+            this.usage("auto-token is not defined");
+        }
+
+        if (file == null) {
+            this.usage("file is not defined");
+        }
+
+        if (!file.exists()) {
+            this.usage("file doesn't exist, please specify full path " + file.getAbsolutePath());
+        }
+
         if (!artifactsDir.exists()) {
             artifactsDir.mkdirs();
-        }
-        if (this.waitMinutes == 0) {
-            this.waitMinutes = parseInt("auto.wait");
-        }
-        if (this.scoreThreshold == 0) {
-            this.scoreThreshold = parseInt("auto.score");
-        }
-        if (!this.showStatusMessages) {
-            this.showStatusMessages = getString("auto.show.status.messages", "").length() > 0;
-        }
-        if (isEmpty(this.stopTestsForStatusMessage)) {
-            this.stopTestsForStatusMessage = getString("auto.stop.tests.on.status", "");
-        }
-        if (this.validateDnsUrlConnection == null) {
-            this.validateDnsUrlConnection = !getBool("auto.skipDnsUrlConnectionValidation", false);
         }
     }
 

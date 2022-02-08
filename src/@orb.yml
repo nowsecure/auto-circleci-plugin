@@ -10,44 +10,44 @@ commands:
   mobile_security_test:
     description: Executes security test using NowSecure AUTO.
     parameters:
-      auto_url:
+      url:
         description: url for nowsecure auto API
         type: string
         default: https://lab-api.nowsecure.com
 
-      auto_token:
+      token:
         description: |
           API token, visit
           https://docs.nowsecure.com/auto/integration-services/jenkins-integration
           to generate token
         type: string
-        default: $AUTO_TOKEN
+        default: $TOKEN
 
-      auto_group:
+      group:
         description: Specify group if you belong to multiple groups
         type: string
-        default: $AUTO_GROUP
+        default: $GROUP
 
-      auto_dir:
+      artifact_dir:
         description: |
           Specify artifacts-dir where security artifacts will be stored
         type: string
         default: "/tmp/workspace/nowsecure-auto-security-test"
 
-      auto_file:
+      file:
         description: |
           Specify absolute path of mobile binary,
           you would need to attach workspace to this plugin step
         type: string
 
-      auto_wait:
+      wait:
         description: |
           Specify maximum time to wait for results,
           if you specify 0 then plugin will not wait for the results
         type: string
         default: "30"
 
-      auto_score:
+      score:
         description: |
           Specify minimum score the app should get
           from security testing, if you specify 0 then score will
@@ -56,37 +56,21 @@ commands:
         type: string
         default: "50"
 
-      auto_show_status_messages:
+      show_status_messages:
         description: |
           Specify flag to show status messages from automation testing
         type: string
         default: "false"
 
-      auto_stop_tests_on_status:
-        description: |
-          Specify flag to show status messages from automation testing
-        type: string
-        default: ""
-
     steps:
-      - attach_workspace:
-          at: /tmp/workspace
       - run:
           command: >
-            nowsecure-ci --auto-url << parameters.auto_url >> \
-              --auto-token << parameters.auto_token >> \
-              --auto-dir << parameters.auto_dir >> \
-              --auto-file << parameters.auto_file >> \
-              --auto-group << parameters.auto_group >> \
-              --auto-wait << parameters.auto_wait >> \
-              --auto-score << parameters.auto_score >> \
-              --auto-show-status-messages <<parameters.auto_show_status_messages>> \
-              --auto-stop-tests-on-status <<parameters.auto_stop_tests_on_status>>
+            nowsecure-auto --url << parameters.url >> \
+              --token << parameters.token >> \
+              --artifact-dir << parameters.artifact_dir >> \
+              --file << parameters.file >> \
+              --group << parameters.group >> \
+              --wait << parameters.wait >> \
+              --score << parameters.score >> \
+              --show-status-messages << parameters.show_status_messages >>
           no_output_timeout: 90m
-      - persist_to_workspace:
-          root: /tmp/workspace
-          paths:
-            - nowsecure-auto-security-test/*
-      - store_artifacts:
-          path: /tmp/workspace/nowsecure-auto-security-test
-          destination: nowsecure-auto-security-test

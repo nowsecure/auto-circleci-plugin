@@ -15,4 +15,4 @@ include 'api'
 include 'services:webservice'
 */
 
-rootProject.name = 'auto-circleci-plugin'
+rootProject.name = 'nowsecure-auto'

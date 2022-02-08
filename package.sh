@@ -7,11 +7,11 @@
 
 ./gradlew build
 
-cat << EOF > nowsecure-ci
+cat << EOF > nowsecure-auto
 #!/bin/sh
 
 exec java -jar \$0 "\$@"
 EOF
 
-cat build/libs/auto-circleci-plugin.jar >> nowsecure-ci
-chmod +x nowsecure-ci
+cat build/libs/auto-circleci-plugin.jar >> nowsecure-auto
+chmod +x nowsecure-auto

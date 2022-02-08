@@ -29,5 +29,5 @@ RUN addgroup --gid 1000 ${APP_USER} \
 WORKDIR ${APP_DIR}
 
 COPY --from=build --chown=$APP_USER:$APP_USER \
-    nowsecure-ci /usr/local/bin
+    nowsecure-auto /usr/local/bin
 
