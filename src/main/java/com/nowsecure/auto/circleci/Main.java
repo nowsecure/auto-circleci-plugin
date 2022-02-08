@@ -275,7 +275,7 @@ public class Main implements NSAutoParameters, NSAutoLogger {
             "    url:                  %s\n" +
             "    artifacts-dir:        %s\n" +
             "    file:                 %s\n" +
-            "    group:                %s\n" +
+            "    group-id:             %s\n" +
             "    wait:                 %s\n" +
             "    score:                %s\n" +
             "    show-status-messages: %s\n",
@@ -347,13 +347,13 @@ public class Main implements NSAutoParameters, NSAutoLogger {
         System.err.println("Usage:");
         System.err
                 .println(
-                        "\t./nowsecure-auto --url https://lab-api.nowsecure.com --file your.apk --token <nowsecure-api-token> --group <nowsecure-group>");
+                        "\t./nowsecure-auto --url https://lab-api.nowsecure.com --file your.apk --token <nowsecure-api-token> --group-id <nowsecure-group>");
 
         System.err.println();
         System.err.println("Options:");
         System.err.println("\t--file                  Required                                absolute path of mobile binary");
         System.err.println("\t--token                 Required                                API token");
-        System.err.println("\t--group                 Default: \"\"                             specify group if you belong to multiple groups");
+        System.err.println("\t--group-id              Default: \"\"                             specify group if you belong to multiple groups");
         System.err.println("\t--url                   Default: https://lab-api.nowsecure.com  url for nowsecure API");
         System.err.println("\t--wait                  Default: 0                              wait for results in minutes, 0 causes no wait");
         System.err.println("\t--score                 Default: 50                             min score. Will exit 1 if score is less than");
@@ -372,7 +372,7 @@ public class Main implements NSAutoParameters, NSAutoLogger {
         for (int i = 0; i < args.length - 1; i++) {
             if ("--url".equals(args[i])) {
                 this.apiUrl = args[i + 1].trim();
-            } else if ("--group".equals(args[i])) {
+            } else if ("--group-id".equals(args[i])) {
                 this.group = args[i + 1].trim();
             } else if ("--artifacts-dir".equals(args[i])) {
                 this.artifactsDir = new File(args[i + 1].trim());
@@ -388,9 +388,9 @@ public class Main implements NSAutoParameters, NSAutoLogger {
                 PLUGIN_NAME = args[i + 1].trim();
             } else if ("--plugin-version".equals(args[i])) {
                 IOHelper.VERSION = args[i + 1].trim();
-            } else if ("--auto-show-status-messages".equals(args[i])) {
+            } else if ("--show-status-messages".equals(args[i])) {
                 this.showStatusMessages = Boolean.valueOf(args[i + 1].trim());
-            } else if ("--auto-stop-tests-on-status".equals(args[i])) {
+            } else if ("--stop-tests-on-status".equals(args[i])) {
                 this.stopTestsForStatusMessage = args[i + 1].trim();
             } else if ("--debug".equals(args[i])) {
                 this.debug = true;

@@ -23,8 +23,11 @@ commands:
         type: string
         default: $AUTO_TOKEN
 
-      group:
-        description: Specify group if you belong to multiple groups
+      group_id:
+        description: |
+          Specify group uuid if you belong to multiple groups. You can obtain the
+          group id by hovering over the group name in the [Account & Management >
+          Groups](https://lab.nowsecure.com/account/management/groups)
         type: string
         default: $AUTO_GROUP
 
@@ -69,7 +72,7 @@ commands:
               --token << parameters.token >> \
               --artifact-dir << parameters.artifact_dir >> \
               --file << parameters.file >> \
-              --group << parameters.group >> \
+              --group-id << parameters.group_id >> \
               --wait << parameters.wait >> \
               --score << parameters.score >> \
               --show-status-messages << parameters.show_status_messages >>

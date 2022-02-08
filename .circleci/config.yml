@@ -5,8 +5,6 @@ orbs:
   # Replace this with your own!
   auto_ci: dylanhitt/ci-auto-orb@<<pipeline.parameters.dev-orb-version>>
   orb-tools: circleci/orb-tools@10.0
-  bats: circleci/bats@1.0
-  shellcheck: circleci/shellcheck@2.0
   docker: circleci/docker@2.0.1
 
 parameters:
@@ -86,7 +84,6 @@ workflows:
           push_tag: stable
 
 jobs:
-
   integration-test:
     docker:
       - image: dylanhitt1/nowsecure-auto:<<pipeline.parameters.image-version>>
@@ -99,8 +96,8 @@ jobs:
             -o app.apk
       - auto_ci/mobile_security_test:
           file: app.apk
-          score: "0"
-          show_status_messages: "true"
+          score: 1
+          show_status_messages: true
 
   promote-image:
     parameters:
