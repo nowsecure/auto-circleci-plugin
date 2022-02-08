@@ -42,10 +42,10 @@ commands:
 
       wait:
         description: |
-          Specify maximum time to wait for results,
+          Specify maximum time to wait (in minutes) for results,
           if you specify 0 then plugin will not wait for the results
-        type: string
-        default: "30"
+        type: integer
+        default: 30
 
       score:
         description: |
@@ -53,14 +53,14 @@ commands:
           from security testing, if you specify 0 then score will
           not be evaulated otherwise build will be
           marked as failure if security score is below this number
-        type: string
-        default: "50"
+        type: integer
+        default: 50
 
       show_status_messages:
         description: |
           Specify flag to show status messages from automation testing
-        type: string
-        default: "false"
+        type: boolean
+        default: false
 
     steps:
       - run:
