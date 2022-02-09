@@ -6,6 +6,22 @@ description: NowSecure AUTO provides fully automated, mobile appsec testing cove
 display:
   source_url: https://github.com/nowsecure/auto-circleci-plugin
   home_url: https://www.nowsecure.com/
+
+executors:
+  default:
+    description: >
+      Container with nowsecure-auto cli
+    docker:
+      - image: dylanhitt1/nowsecure-auto:<< parameters.tag >>
+    parameters:
+      tag:
+        default: lts
+        description: >
+          The `dylanhitt1/nowsecure-auto` Docker image version tag.
+          This tag is exposed for development use. It is suggested to
+          not change the default.
+        type: string
+
 commands:
   mobile_security_test:
     description: Executes security test using NowSecure AUTO.
@@ -19,7 +35,8 @@ commands:
         description: |
           API token, visit
           https://docs.nowsecure.com/auto/integration-services/jenkins-integration
-          to generate token
+          to generate token. The default is to read teh variable AUTO_TOKEN from
+          the environment or context.
         type: string
         default: $AUTO_TOKEN
 
@@ -27,7 +44,8 @@ commands:
         description: |
           Specify group uuid if you belong to multiple groups. You can obtain the
           group id by hovering over the group name in the [Account & Management >
-          Groups](https://lab.nowsecure.com/account/management/groups)
+          Groups](https://lab.nowsecure.com/account/management/groups). The default
+          is to read the variable AUTO_GROUP fromthe environment or context.
         type: string
         default: $AUTO_GROUP
 

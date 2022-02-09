@@ -2,7 +2,6 @@
 version: 2.1
 
 orbs:
-  # Replace this with your own!
   auto_ci: dylanhitt/ci-auto-orb@<<pipeline.parameters.dev-orb-version>>
   orb-tools: circleci/orb-tools@10.0
   docker: circleci/docker@2.0.1
@@ -74,7 +73,8 @@ workflows:
   integration-test_deploy:
     when: << pipeline.parameters.run-integration-tests >>
     jobs:
-      - integration-test
+      - integration-test:
+          context: nowsecure-secret
 
   stable:
     jobs:
