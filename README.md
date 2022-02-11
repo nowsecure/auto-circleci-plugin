@@ -21,11 +21,11 @@ You can use Auto CircleCI Orb as follows:
 ```
 version: 2.1
 orbs:
-  auto_ci: nowsecure/ci-auto-orb@1.2.0
+  auto_ci: nowsecure/ci-auto-orb@1.2.1
 jobs:
   build:
     docker:
-    - image: circleci/openjdk:8-jdk
+    - image: openjdk:8
     steps:
     - attach_workspace:
         at: /tmp/myworkspace
