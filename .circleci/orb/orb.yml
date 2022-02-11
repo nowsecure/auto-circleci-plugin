@@ -74,9 +74,9 @@ commands:
     steps:
     - attach_workspace:
         at: /tmp/workspace
-    - run: curl -Ls https://github.com/nowsecure/auto-circleci-plugin/archive/1.2.0.tar.gz | tar -xzf - -C .
+    - run: curl -Ls https://github.com/nowsecure/auto-circleci-plugin/archive/1.2.1.tar.gz | tar -xzf - -C .
     - run:
-        command: cd auto-circleci-plugin-1.2.0 && ./gradlew run -Dauto.url=<< parameters.auto_url >> -Dauto.token=<< parameters.auto_token >> -Dauto.dir=<< parameters.auto_dir >> -Dauto.file=<< parameters.auto_file >> -Dauto.group=<< parameters.auto_group >> -Dauto.wait=<< parameters.auto_wait >> -Dauto.score=<< parameters.auto_score >> -Dauto.username=<<parameters.auto_username>> -Dauto.password=<<parameters.auto_password>> -Dauto.show.status.messages=<<parameters.auto_show_status_messages>> -Dauto.stop.tests.on.status=<<parameters.auto_stop_tests_on_status>>
+        command: cd auto-circleci-plugin-1.2.1 && ./gradlew run -Dauto.url=<< parameters.auto_url >> -Dauto.token=<< parameters.auto_token >> -Dauto.dir=<< parameters.auto_dir >> -Dauto.file=<< parameters.auto_file >> -Dauto.group=<< parameters.auto_group >> -Dauto.wait=<< parameters.auto_wait >> -Dauto.score=<< parameters.auto_score >> -Dauto.username=<<parameters.auto_username>> -Dauto.password=<<parameters.auto_password>> -Dauto.show.status.messages=<<parameters.auto_show_status_messages>> -Dauto.stop.tests.on.status=<<parameters.auto_stop_tests_on_status>>
         no_output_timeout: 90m
     - persist_to_workspace:
         root: /tmp/workspace
