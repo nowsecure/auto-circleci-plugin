@@ -6,3 +6,6 @@ bin/
 build*
 dist
 *.sh
+
+auto-circleci-plugin-*
+*.tar.gz
