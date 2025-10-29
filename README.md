@@ -7,7 +7,7 @@ This Extension has been deprecated.  NowSecure strongly recommends migrating to 
 Migration to the new extension is straightforward:
 
 1. Install the new `nowsecure-circle-ci-orb` according to the instructions on the registry page
-2. Review the parameters for the new extension taking care to evaluate the updated default values of parameters to ensure the meet your requirements.
+2. Review the parameters for the new extension taking care to evaluate the updated default values of parameters to ensure they meet your requirements.
 
 Take note of `analysis_type` which is a new parameter. This parameter allows you to run static only or full assessments.
 
